@@ -1,0 +1,7 @@
+{
+    "title": "Вход",
+    "usernameInputPlaceholder": "Имя пользователя",
+    "passwordInputPlaceholder": "Пароль",
+    "submitBtn": "Подтвердить",
+    "cancelBtn": "Отмена"
+}

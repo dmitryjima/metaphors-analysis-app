@@ -1,7 +1,7 @@
 import React from 'react'
 import { Helmet } from 'react-helmet';
 
-const LandingPage = () => {
+const ResultsPage = () => {
 
     return (
         <div>
@@ -10,4 +10,4 @@ const LandingPage = () => {
     )
 }
 
-export default LandingPage;
+export default ResultsPage;

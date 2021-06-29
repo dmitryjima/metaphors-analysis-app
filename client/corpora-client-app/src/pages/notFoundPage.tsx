@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useAppSelector } from '../app/hooks'
 
-const EditionsMainPage = () => {
+const NotFoundPage = () => {
     const { t, i18n, ready } = useTranslation("editionsMain");
 
     const { editions: editionsState } = useAppSelector(state => state)
@@ -24,15 +24,13 @@ const EditionsMainPage = () => {
     return (
         <>
         <Helmet
-            title={t(`title`)}
+            title={`404`}
         /> 
         <div>
-            {
-                editionsState.editions.map(edition => <NavLink to={`/editions/${edition._id}`} >{edition.name}</NavLink>)
-            }
+            page not found
         </div>
         </>
     )
 }
 
-export default EditionsMainPage;
+export default NotFoundPage;

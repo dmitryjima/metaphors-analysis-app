@@ -1,14 +1,13 @@
-import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 import { loadStateLS, saveStateLS } from '../utils/localStorage';
 
 import { login, logout, checkToken } from '../api/endpoints/authentication';
-import { AppDispatch, RootState } from '../app/store';
+import { AppThunk } from '../app/store';
 
 // Toasts
 import { toast } from 'react-toastify';
 import { _setLoginModalShown, _setLoginSessionExpired } from './uiSlice';
-import { DefaultRootState } from 'react-redux';
 
 export interface UserState {
     user: string,
@@ -23,14 +22,16 @@ const defaultState: UserState = {
     isLoading: false
 }
 
-const initialState = loadStateLS('user') ? loadStateLS('user') : defaultState;
+const loadUserStateFromLS = (): UserState => loadStateLS('user')
+
+const initialState = loadStateLS('user') ? loadUserStateFromLS() : defaultState;
 
 export const user = createSlice({
     name: 'user',
     initialState,
     reducers: {
         _setUser(state, action) {
-            const { user } = action.payload;
+            const user = action.payload;
             state.user = user
         },
         _setAuthenticated(state, action) {
@@ -39,7 +40,7 @@ export const user = createSlice({
         _setLoading(state, action) {
             state.isLoading = action.payload
         },
-        _resetState(state, action) {
+        _resetState(state) {
             state = defaultState
         },
         _setError(state, action) {
@@ -62,7 +63,7 @@ export const handleLogin = (
     password: string,
     successMsg?: string,
     errorMsg?: string
-) => async (dispatch: Dispatch, getState: () => RootState) => {
+): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(_setLoading(true));
         dispatch(_setError(''));
@@ -90,13 +91,13 @@ export const handleLogin = (
     } catch (err) {
         dispatch(_setLoading(false));
         dispatch(_setError(err.toString()));
-        dispatch(_resetState(''))
+        dispatch(_resetState())
         console.log(err);
         toast.error(errorMsg ? errorMsg : "An error occured")
     }
 }
 
-export const handleLogout = () => async (dispatch: Dispatch, getState: () => RootState) => {
+export const handleLogout = (): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(_setLoading(true));
         dispatch(_setError(''));
@@ -104,7 +105,7 @@ export const handleLogout = () => async (dispatch: Dispatch, getState: () => Roo
         const response = await logout();
 
         if(response && response.status === 'OK') {
-            dispatch(_resetState(''));
+            dispatch(_resetState());
             dispatch(_setLoading(false));
             saveStateLS(
                 defaultState, 
@@ -112,13 +113,13 @@ export const handleLogout = () => async (dispatch: Dispatch, getState: () => Roo
             );
         }
     } catch (err) {
-        dispatch(_resetState(''));
+        dispatch(_resetState());
         dispatch(_setLoading(false));
         console.log(err);
     }
 }
 
-export const handleCheckToken = () => async (dispatch: Dispatch, getState: () => RootState) => {
+export const handleCheckToken = (): AppThunk => async (dispatch, getState) => {
     try {
         let state = getState()
 
@@ -127,7 +128,7 @@ export const handleCheckToken = () => async (dispatch: Dispatch, getState: () =>
             if(!checkTokeRes || checkTokeRes.status !== 'OK') {
                 dispatch(_setLoginModalShown(true));
                 dispatch(_setLoginSessionExpired(true));
-                dispatch(_resetState(''));
+                dispatch(_resetState());
                 saveStateLS(
                     defaultState, 
                     'user'
@@ -140,7 +141,7 @@ export const handleCheckToken = () => async (dispatch: Dispatch, getState: () =>
         console.log(err);
         dispatch(_setLoginModalShown(true));
         dispatch(_setLoginSessionExpired(true));
-        dispatch(_resetState(''));
+        dispatch(_resetState());
         saveStateLS(
             defaultState, 
             'user'

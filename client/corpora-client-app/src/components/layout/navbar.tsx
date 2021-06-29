@@ -1,8 +1,13 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
 
+// Translations
+import { useTranslation } from 'react-i18next';
+
+// Redux state
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+
+// Styled components
+import styled from 'styled-components';
 
 const NavbarStyled = styled.div`
     width: 100%;
@@ -14,8 +19,9 @@ const NavbarStyled = styled.div`
 const Navbar = () => {
     const { t, i18n, ready } = useTranslation("navbar");
 
-    const dispatch = useDispatch();
-    const state = useSelector(state => state);
+
+    const dispatch = useAppDispatch();
+    const state = useAppSelector(state => state)
 
     return (
         <NavbarStyled>

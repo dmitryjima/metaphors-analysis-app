@@ -1,6 +1,13 @@
 import React from 'react';
+
+
+// Translations
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+
+// Redux state
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+
+// Styled components
 import styled from 'styled-components';
 
 
@@ -11,8 +18,8 @@ const SidebarStyled = styled.div`
 const Sidebar = () => {
     const { t, i18n, ready } = useTranslation("sidebar");
 
-    const dispatch = useDispatch();
-    const state = useSelector(state => state);
+    const dispatch = useAppDispatch();
+    const state = useAppSelector(state => state)
 
     return (
         <SidebarStyled>

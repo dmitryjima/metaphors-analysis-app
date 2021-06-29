@@ -1,15 +1,12 @@
-import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
-
-import { loadStateLS, saveStateLS } from '../utils/localStorage';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { fetchAllEditions, createNewEdition, updateEdition, deleteEdition } from '../api/endpoints/editions';
 
 // Toasts
 import { toast } from 'react-toastify';
 
-import { DefaultRootState } from 'react-redux';
 import { Edition } from '../api/dataModels';
-import { RootState } from '../app/store';
+import { AppThunk } from '../app/store';
 
 export interface editionsState {
     editions: Edition[],
@@ -18,14 +15,17 @@ export interface editionsState {
     addNewEditionLoading: boolean,
     addNewEditionError?: string,
     removeEditionLoading: boolean,
-    removeEditionError?: string
+    removeEditionError?: string,
+    updateEditionLoading: boolean,
+    updateEditionError?: string
 }
 
 const defaultState: editionsState = {
     editions: [],
     isEditionsLoading: false,
     addNewEditionLoading: false,
-    removeEditionLoading: false
+    removeEditionLoading: false,
+    updateEditionLoading: false
 }
 
 const initialState = defaultState;
@@ -44,8 +44,8 @@ export const editions = createSlice({
         _setEditionsLoadingError(state, action) {
             state.editionsLoadingError = action.payload
         },
-        _addEdition(state, action) {
-            const { newEdition } = action.payload;
+        _addEdition(state, action: PayloadAction<Edition>) {
+            const newEdition = action.payload;
             state.editions.push(newEdition)
         },
         _setAddEditionLoading(state, action) {
@@ -63,6 +63,16 @@ export const editions = createSlice({
         },
         _setRemoveEditionError(state, action) {
             state.removeEditionError = action.payload
+        },
+        _updateEdition(state, action: PayloadAction<Edition>) {
+            let index = state.editions.findIndex(e => e._id === action.payload._id)
+            state.editions[index] = {...action.payload}
+        },
+        _setUpdateEditionLoading(state, action) {
+            state.updateEditionLoading = action.payload
+        },
+        _setUpdateEditionError(state, action) {
+            state.updateEditionError = action.payload
         }
     }
 });
@@ -76,11 +86,14 @@ export const {
     _setAddEditionLoading,
     _setAddEditionError,
     _setRemoveEditionLoading,
-    _setRemoveEditionError
+    _setRemoveEditionError,
+    _setUpdateEditionLoading,
+    _setUpdateEditionError,
+    _updateEdition
 } = editions.actions;
 
 
-export const handleFetchEditions = () => async (dispatch: Dispatch, getState: () => RootState) => {
+export const handleFetchEditions = (): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(_setEditionsLoading(true));
         dispatch(_setEditionsLoadingError(''));
@@ -107,7 +120,7 @@ export const handleFetchEditions = () => async (dispatch: Dispatch, getState: ()
 
 export const handleAddNewEdition = (
     newEdition: Edition
-) => async (dispatch: Dispatch, getState: () => RootState) => {
+): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(_setAddEditionLoading(true));
         dispatch(_setAddEditionError(''));
@@ -130,9 +143,34 @@ export const handleAddNewEdition = (
     }
 }
 
+export const handleUpdateEdition = (
+    editionToUpdate: Edition
+): AppThunk => async (dispatch, getState) => {
+    try {
+        dispatch(_setUpdateEditionLoading(true));
+        dispatch(_setUpdateEditionError(''));
+
+        const updatedEdition = await updateEdition(editionToUpdate);
+
+        console.log(updatedEdition)
+
+        if (updatedEdition) {
+            dispatch(_updateEdition(updatedEdition));
+
+            let state = getState();
+            console.log(state.editions)
+        }
+        dispatch(_setUpdateEditionLoading(false));
+    } catch (err) {
+        dispatch(_setUpdateEditionLoading(false));
+        dispatch(_setUpdateEditionError(err.toString()));
+        console.log(err);
+    }
+}
+
 export const handleDeleteEdition = (
     editionToDelete: Edition
-) => async (dispatch: Dispatch, getState: () => RootState) => {
+): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(_setRemoveEditionLoading(true));
         dispatch(_setRemoveEditionError(''));
