@@ -42,15 +42,18 @@ connectToMongo(DatabaseURI);
 
 
     // Import all the API-routers and custom app-level middleware
-// Private
-
+// API Routers
+const editionsRouter = require('./api-routes/editions-api/editionsRouter');
+const articlesRouter = require('./api-routes/articles-api/articlesRouter');
+const metaphorsRouter = require('./api-routes/metaphors-api/metaphorsRouter');
+const resultsRouter = require('./api-routes/results-api/resultsRouter');
 
 // Auth admin router 
+const authRouter = require('./api-routes/auth-api/authRouter');
 
 // Auth admin middleware
+const authMiddleware = require('./middleware/auth');
 
-
-// Public routers
 
 
 
@@ -67,11 +70,15 @@ app.use(logger(':method :url :status :res[content-length] - :response-time ms'))
 
 
     // Use API-routers
-// Public API routes
+// API routes
+app.use('/api/editions', editionsRouter)
+app.use('/api/articles', articlesRouter)
+app.use('/api/metaphors', metaphorsRouter)
+app.use('/api/results', resultsRouter)
 
-// Auth router
+// Auth route
+app.use('/api/auth', authRouter);
 
-// Private (protected) API routes
 
 if (process.env.NODE_ENV === 'production') {
     // Set static folder for the client app
