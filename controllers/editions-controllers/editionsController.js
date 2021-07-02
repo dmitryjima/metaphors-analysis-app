@@ -3,6 +3,7 @@ const Edition = require('../../models/Edition');
 
 
 const url = require('url');
+const path = require('path');
 const fs = require('fs').promises;
 const multer = require('multer');
 const { uuid } = require('uuidv4');
@@ -124,10 +125,10 @@ exports.delete_Delete_Edition = async (req, res, next) => {
     try {
         const { id } = req.body;
 
-        const article = await Article.findOneAndDelete({ edition: id}).exec()
+        const article = await Article.findOne({ edition: id}).exec()
 
         if(article) {
-            await Article.deleteMany({ edition: id}).exec()
+            throw new Error('Edition has articles')
         }
     
         const deletedEdition = await Edition.findByIdAndDelete(id);

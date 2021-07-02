@@ -40,7 +40,7 @@ export async function fetchAllArticles(): Promise<Array<Article>> {
  * @async
  * @function fetchArticlesByArticleId
 */
-export async function fetchArticlesByArticleId(editionId: string): Promise<Array<Article>> {
+export async function fetchArticlesByEditionId(editionId: string): Promise<Array<Article>> {
     const { data } = await axios.get(
         `${BASE_URL}/api/articles/edition/${editionId}`
     );

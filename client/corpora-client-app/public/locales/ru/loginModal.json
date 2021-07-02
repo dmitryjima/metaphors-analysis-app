@@ -2,6 +2,9 @@
     "title": "Вход",
     "usernameInputPlaceholder": "Имя пользователя",
     "passwordInputPlaceholder": "Пароль",
+    "sessionExpiredMsg": "Сессия закончилась, войдите снова",
     "submitBtn": "Подтвердить",
-    "cancelBtn": "Отмена"
+    "cancelBtn": "Отмена",
+    "successMsg": "Вход успешен",
+    "errorMsg": "Произошла ошибка"
 }

@@ -57,6 +57,22 @@ export async function updateEdition(editionToUpdate: Edition): Promise<Edition> 
     return data;
 }
 
+/**
+ * Update edition picture
+ * @async
+ * @function updateEditionPicture
+*/
+export async function updateEditionPicture(
+    formDataPayload: FormData
+): Promise<Edition> {
+
+    const { data } = await axios.post(
+        `${BASE_URL}/api/editions/update_picture`,
+        formDataPayload
+    );
+
+    return data;
+}
 
 /**
  * Delete edition

@@ -65,6 +65,8 @@ app.use(cors());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(helmet());
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 // logging in development
 app.use(logger(':method :url :status :res[content-length] - :response-time ms'));
 

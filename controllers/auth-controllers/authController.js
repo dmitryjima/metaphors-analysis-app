@@ -50,7 +50,6 @@ exports.check_if_token_valid = async (req, res, next) => {
 
 // Handle Logout
 exports.logout_controller = async (req, res, next) => {
-    console.log(req.body)
     const token = req.token;
     try {
         if(!token) throw new Error('No token');

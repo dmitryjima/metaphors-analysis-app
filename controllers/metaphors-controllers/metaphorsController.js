@@ -53,8 +53,6 @@ exports.post_Create_New_Metaphor_Case = async(req, res, next) => {
             ])
             .exec();
 
-        console.log(article)
-
         if(!article) {
             let err = new Error('Article not found');
             err.status = 404;
@@ -78,8 +76,6 @@ exports.post_Create_New_Metaphor_Case = async(req, res, next) => {
     
             await model.save();
         }
-
-        console.log(model)
 
         newMetaphorCase.metaphorModel = model
 
@@ -156,8 +152,6 @@ exports.put_Update_Metaphor_Case = async(req, res, next) => {
         
                 await model.save();
             }
-    
-            console.log(model)
     
             metaphorCase.metaphorModel = model
         }

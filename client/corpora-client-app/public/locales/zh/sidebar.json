@@ -1,5 +1,12 @@
 {
-    "links": {
-        "about": "关于项目"
-    }
+    "navigation": "网站导航",
+    "home": "主页",
+    "editions": "媒体",
+    "languages": {
+        "en": "英文",
+        "ru": "俄文",
+        "zh": "中文"
+    },
+    "results": "分析结果",
+    "about": "关于项目"
 }

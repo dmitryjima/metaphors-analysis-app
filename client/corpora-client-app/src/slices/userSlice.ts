@@ -7,7 +7,7 @@ import { AppThunk } from '../app/store';
 
 // Toasts
 import { toast } from 'react-toastify';
-import { _setLoginModalShown, _setLoginSessionExpired } from './uiSlice';
+import { _setLoginModalShown, _setLoginSessionExpired, _setLogoutModalShown } from './uiSlice';
 
 export interface UserState {
     user: string,
@@ -22,9 +22,9 @@ const defaultState: UserState = {
     isLoading: false
 }
 
-const loadUserStateFromLS = (): UserState => loadStateLS('user')
+//const loadUserStateFromLS = (): UserState => loadStateLS('user')
 
-const initialState = loadStateLS('user') ? loadUserStateFromLS() : defaultState;
+const initialState = loadStateLS('user') ? loadStateLS<UserState>('user')!! : defaultState;
 
 export const user = createSlice({
     name: 'user',
@@ -41,7 +41,7 @@ export const user = createSlice({
             state.isLoading = action.payload
         },
         _resetState(state) {
-            state = defaultState
+            return defaultState
         },
         _setError(state, action) {
             state.error = action.payload
@@ -61,6 +61,7 @@ export const {
 export const handleLogin = (
     username: string,
     password: string,
+    resetInputCallback: Function,
     successMsg?: string,
     errorMsg?: string
 ): AppThunk => async (dispatch, getState) => {
@@ -74,6 +75,8 @@ export const handleLogin = (
             dispatch(_setAuthenticated(true));
             dispatch(_setUser(username));
 
+            resetInputCallback();
+            dispatch(_setLoginSessionExpired(false));
             dispatch(_setLoginModalShown(false));
             dispatch(_setLoading(false));
 
@@ -107,6 +110,7 @@ export const handleLogout = (): AppThunk => async (dispatch, getState) => {
         if(response && response.status === 'OK') {
             dispatch(_resetState());
             dispatch(_setLoading(false));
+            dispatch(_setLogoutModalShown(false));
             saveStateLS(
                 defaultState, 
                 'user'
@@ -125,6 +129,7 @@ export const handleCheckToken = (): AppThunk => async (dispatch, getState) => {
 
         if (state.user && state.user.isAuthenticated) {
             const checkTokeRes = await checkToken()
+
             if(!checkTokeRes || checkTokeRes.status !== 'OK') {
                 dispatch(_setLoginModalShown(true));
                 dispatch(_setLoginSessionExpired(true));

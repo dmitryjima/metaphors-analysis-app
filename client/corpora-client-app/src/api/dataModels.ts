@@ -11,7 +11,7 @@ export interface Article {
     heading: string,
     body?: string,
     url?: string,
-    publication_date?: Date,
+    publication_date?: Date | null,
     fullyAnnotated: boolean,
     tone?: string,
     comment?: string,

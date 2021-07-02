@@ -1,3 +1,35 @@
 {
-    
+    "metatitle": "Editions | AI metaphorization in Media Discourse",
+    "title": "Editions",
+    "languages": {
+        "en": "English",
+        "ru": "Russian",
+        "zh": "Chinese"
+    },
+    "modals": {
+        "addEditionModal": {
+            "title": "Add new edition",
+            "nameLabel": "Name",
+            "languageLabel": "Language",
+            "languageHelperText": "Select edition's language",
+            "descriptionLabel": "Description",
+            "submitBtn": "Confirm",
+            "cancelBtn": "Cancel"
+        },
+        "updateEditionModal" : {
+            "title": "Update edition",
+            "nameLabel": "Name",
+            "languageLabel": "Language",
+            "languageHelperText": "Select edition's language",
+            "descriptionLabel": "Description",
+            "submitBtn": "Confirm",
+            "cancelBtn": "Cancel"
+        },
+        "deleteEditionModal": {
+            "title": "Delete edition",
+            "message": "Are you sure you want to delete edition?",
+            "submitBtn": "Confirm",
+            "cancelBtn": "Cancel"
+        }
+    }
 }

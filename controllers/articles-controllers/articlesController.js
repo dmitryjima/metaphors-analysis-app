@@ -8,8 +8,6 @@ exports.post_Create_New_Article = async (req, res, next) => {
             newArticle
         } = req.body;
 
-        console.log(newArticle)
-
         let createdArticle = new Article(newArticle)
 
         const savedArticle = await createdArticle.save()

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { _setLoginModalShown } from '../../slices/uiSlice';
+import { _setLoginModalShown, _setLoginSessionExpired } from '../../slices/uiSlice';
 import { handleLogin } from '../../slices/userSlice';
 
 const LoginModalDialog = () => {
@@ -26,11 +26,21 @@ const LoginModalDialog = () => {
           onClose={() => {
             setPasswordInput('');
             setUsernameInput('');
+            dispatch(_setLoginSessionExpired(false));
             dispatch(_setLoginModalShown(false));
           }}
         >
             <DialogTitle>{t(`title`)}</DialogTitle>
             <DialogContent>
+                {
+                uiState.isLoginSessionExpired
+                ?
+                <div style={{padding: '.3em'}}>
+                    {t(`sessionExpiredMsg`)}
+                </div>
+                :
+                null
+                }
                 <div style={{padding: '.3em'}}>
                     <TextField
                         size="small"
@@ -61,7 +71,13 @@ const LoginModalDialog = () => {
                     onClick={() => {
                         dispatch(handleLogin(
                             usernameInput,
-                            passwordInput
+                            passwordInput,
+                            () => {
+                                setPasswordInput('');
+                                setUsernameInput('');
+                            },
+                            t(`successMsg`),
+                            t(`errorMsg`)
                         ));
                     }}
                     disabled={!usernameInput || !passwordInput || userState.isLoading}
@@ -74,6 +90,7 @@ const LoginModalDialog = () => {
                         setPasswordInput('');
                         setUsernameInput('')
                         dispatch(_setLoginModalShown(false));
+                        dispatch(_setLoginSessionExpired(false));
                     }}
                 >
                     {t(`cancelBtn`)}

@@ -1,12 +1,12 @@
-export const loadStateLS = (stateKey: string) => {
+export const loadStateLS = <Type>(stateKey: string): Type | null => {
     try {
         const serializedState = localStorage.getItem(stateKey);
         if (serializedState === null) {
-            return undefined;
+            return null;
         }
         return JSON.parse(serializedState);
     } catch (err) {
-        return undefined;
+        return null;
     }
 }
 

@@ -1,3 +1,35 @@
 {
-    
+    "metatitle": "媒体期刊 | 媒体话语中人工智能隐喻",
+    "title": "媒体期刊",
+    "languages": {
+        "en": "英文",
+        "ru": "俄文",
+        "zh": "中文"
+    },
+    "modals": {
+        "addEditionModal": {
+            "title": "添加新媒体期刊",
+            "nameLabel": "名称",
+            "languageLabel": "语言",
+            "languageHelperText": "请选择媒体的语言",
+            "descriptionLabel": "简介",
+            "submitBtn": "确认",
+            "cancelBtn": "取消"
+        },
+        "updateEditionModal" : {
+            "title": "更新媒体期刊",
+            "nameLabel": "名称",
+            "languageLabel": "语言",
+            "languageHelperText": "请选择媒体的语言",
+            "descriptionLabel": "简介",
+            "submitBtn": "确认",
+            "cancelBtn": "取消"
+        },
+        "deleteEditionModal": {
+            "title": "删除媒体期刊",
+            "message": "确实要删除该媒体吗？",
+            "submitBtn": "确认",
+            "cancelBtn": "取消"
+        }
+    }
 }

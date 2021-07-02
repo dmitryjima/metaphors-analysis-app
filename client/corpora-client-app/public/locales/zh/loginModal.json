@@ -1,0 +1,10 @@
+{
+    "title": "登录",
+    "usernameInputPlaceholder": "用户名",
+    "passwordInputPlaceholder": "密码",
+    "sessionExpiredMsg": "用户会话已过期，请重新登录",
+    "submitBtn": "确认",
+    "cancelBtn": "取消",
+    "successMsg": "登录成功",
+    "errorMsg": "发生错误"
+}

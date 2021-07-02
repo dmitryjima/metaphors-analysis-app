@@ -1,3 +1,35 @@
 {
-    
+    "metatitle": "Издания | Метафоризация ИИ в медиа-дискурсе",
+    "title": "Издания",
+    "languages": {
+        "en": "Английский",
+        "ru": "Русский",
+        "zh": "Китайский"
+    },
+    "modals": {
+        "addEditionModal": {
+            "title": "Добавить новое издание",
+            "nameLabel": "Название",
+            "languageLabel": "Язык",
+            "languageHelperText": "Выберите язык издания",
+            "descriptionLabel": "Описание",
+            "submitBtn": "Добавить",
+            "cancelBtn": "Отмена"
+        },
+        "updateEditionModal" : {
+            "title": "Редактировать издание",
+            "nameLabel": "Название",
+            "languageLabel": "Язык",
+            "languageHelperText": "Выберите язык издания",
+            "descriptionLabel": "Описание",
+            "submitBtn": "Сохранить",
+            "cancelBtn": "Отмена"
+        },
+        "deleteEditionModal": {
+            "title": "Удалить издание",
+            "message": "Вы уверены, что хотите удалить издание?",
+            "submitBtn": "Подтвердить",
+            "cancelBtn": "Отмена"
+        }
+    }
 }

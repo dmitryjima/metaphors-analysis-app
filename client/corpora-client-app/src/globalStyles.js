@@ -38,14 +38,14 @@ const GlobalStyle = createGlobalStyle`
   }
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--main-color-darkGrey) rgba(127, 144, 159, 0.2);
+    scrollbar-color: var(--y-in-mn-blue) rgba(127, 144, 159, 0.2);
   }
   *::-webkit-scrollbar-track {
     background: rgba(127, 144, 159, 0.2);
   }
   *::-webkit-scrollbar-thumb {
-    background-color: var(--main-color-darkGrey) ;
-    border-radius: 3px;
+    background-color: var(--y-in-mn-blue) ;
+    border-radius: 2px;
     border: transparent;
   }
 `;

@@ -5,18 +5,21 @@ import { Route, Switch } from 'react-router';
 import EditionsMainPage from './editionsMain';
 import EditionPage from './editionPage';
 
-import { Edition } from '../api/dataModels';
+import { useAppSelector } from '../app/hooks';
 
-import { useTranslation } from 'react-i18next';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+interface EditionsPagesContainerProps {
+  availableLanguages: string[]
+}
 
-const EditionsPagesContainer = () => {
+const EditionsPagesContainer: React.FC<EditionsPagesContainerProps> = ({
+  availableLanguages
+}) => {
     const { editions: editionsState } = useAppSelector(state => state)
 
     if (editionsState.isEditionsLoading) {
         return (
             <div>
-                Loading...
+              Loading...
             </div>
         )
     }
@@ -40,7 +43,9 @@ const EditionsPagesContainer = () => {
             exact 
             path="/editions"
           >
-            <EditionsMainPage />
+            <EditionsMainPage
+              availableLanguages={availableLanguages}
+            />
           </Route>
         </Switch>
     )

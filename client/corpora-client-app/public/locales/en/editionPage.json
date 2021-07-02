@@ -1,3 +1,32 @@
 {
-    
+    "metatitle": "Editions | AI metaphorization in Media Discourse",
+
+    "noArticlesMsg": "No articles under selected criteria",
+    "tableRow": {
+        "tableHead": {
+            "annotationStatus": "Annotation Status",
+            "annotationStatus__all": "All",
+            "annotationStatus__annotated": "Annotated",
+            "annotationStatus__notAnnotated": "Not annotated",
+            "heading": "Heading",
+            "publication_date": "Publication Date",
+            "tone": "Tone",
+            "metaphors": "Metaphors"
+        }
+    },
+    "dialogs": {
+        "AddNewArticle": {
+            "title": "Add new article",
+            "headingLabel": "Heading",
+            "publicationDateLabel": "Publication Date",
+            "urlLabel": "URL",
+            "saveBtn": "Save"
+        },
+        "deleteArticleModal": {
+            "title": "Delete article",
+            "message": "Are you sure you want to delete article?",
+            "submitBtn": "Confirm",
+            "cancelBtn": "Cancel"
+        }
+    }
 }

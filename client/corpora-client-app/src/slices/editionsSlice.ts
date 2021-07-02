@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { fetchAllEditions, createNewEdition, updateEdition, deleteEdition } from '../api/endpoints/editions';
+import { fetchAllEditions, createNewEdition, updateEdition, deleteEdition, updateEditionPicture } from '../api/endpoints/editions';
 
 // Toasts
 import { toast } from 'react-toastify';
@@ -100,15 +100,10 @@ export const handleFetchEditions = (): AppThunk => async (dispatch, getState) =>
 
         const editionsFromAPI = await fetchAllEditions()
 
-        console.log(editionsFromAPI)
-
         if(editionsFromAPI && editionsFromAPI.length > 0) {
             dispatch(_setEditions({
                 editions: editionsFromAPI
             }));
-
-            let state = getState();
-            console.log(state)
         }
         dispatch(_setEditionsLoading(false));
     } catch (err) {
@@ -119,7 +114,9 @@ export const handleFetchEditions = (): AppThunk => async (dispatch, getState) =>
 }
 
 export const handleAddNewEdition = (
-    newEdition: Edition
+    newEdition: Edition,
+    closeModalCallback: Function,
+    clearInputCallback: Function
 ): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(_setAddEditionLoading(true));
@@ -127,13 +124,10 @@ export const handleAddNewEdition = (
 
         const newlyAddedEdition = await createNewEdition(newEdition);
 
-        console.log(newlyAddedEdition)
-
         if(newlyAddedEdition) {
             dispatch(_addEdition(newlyAddedEdition));
-
-            let state = getState();
-            console.log(state.editions)
+            closeModalCallback();
+            clearInputCallback();
         }
         dispatch(_setAddEditionLoading(false));
     } catch (err) {
@@ -144,7 +138,9 @@ export const handleAddNewEdition = (
 }
 
 export const handleUpdateEdition = (
-    editionToUpdate: Edition
+    editionToUpdate: Edition,
+    closeModalCallback?: Function,
+    clearEditionToUpdateCallback?: Function
 ): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(_setUpdateEditionLoading(true));
@@ -152,13 +148,30 @@ export const handleUpdateEdition = (
 
         const updatedEdition = await updateEdition(editionToUpdate);
 
-        console.log(updatedEdition)
+        if (updatedEdition) {
+            dispatch(_updateEdition(updatedEdition));
+            closeModalCallback && closeModalCallback();
+            clearEditionToUpdateCallback && clearEditionToUpdateCallback()
+        }
+        dispatch(_setUpdateEditionLoading(false));
+    } catch (err) {
+        dispatch(_setUpdateEditionLoading(false));
+        dispatch(_setUpdateEditionError(err.toString()));
+        console.log(err);
+    }
+}
+
+export const handleUpdateEditionPicture = (
+    formData: FormData
+): AppThunk => async (dispatch, getState) => {
+    try {
+        dispatch(_setUpdateEditionLoading(true));
+        dispatch(_setUpdateEditionError(''));
+
+        const updatedEdition = await updateEditionPicture(formData);
 
         if (updatedEdition) {
             dispatch(_updateEdition(updatedEdition));
-
-            let state = getState();
-            console.log(state.editions)
         }
         dispatch(_setUpdateEditionLoading(false));
     } catch (err) {
@@ -169,7 +182,9 @@ export const handleUpdateEdition = (
 }
 
 export const handleDeleteEdition = (
-    editionToDelete: Edition
+    editionToDelete: Edition,
+    closeModalCallback: Function,
+    clearEditionToDelete: Function
 ): AppThunk => async (dispatch, getState) => {
     try {
         dispatch(_setRemoveEditionLoading(true));
@@ -177,13 +192,10 @@ export const handleDeleteEdition = (
 
         const deletedEdition = await deleteEdition(editionToDelete._id!!)
 
-        console.log(deletedEdition)
-
         if(deletedEdition) {
             dispatch(_removeEditionById(deletedEdition._id));
-
-            let state = getState();
-            console.log(state.editions)
+            closeModalCallback();
+            clearEditionToDelete();
         }
         dispatch(_setRemoveEditionLoading(false));
     } catch (err) {
