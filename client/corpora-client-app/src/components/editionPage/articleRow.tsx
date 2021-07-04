@@ -94,6 +94,9 @@ const ArticleRow: React.FC<ArticleRowProps> = ({
                 <Checkbox
                     color="primary"
                     disabled={isArticlesUpdating || !userState.isAuthenticated}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
                     onChange={(e) => {
                         e.stopPropagation();
                         if (!userState.isAuthenticated) return

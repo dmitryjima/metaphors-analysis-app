@@ -19,7 +19,7 @@ export interface DeleteMetaphorCaseReturn {
 /**
  * Create new metaphor case
  * @async
- * @function createNewArticle
+ * @function createNewMetaphorCase
 */
 export async function createNewMetaphorCase(
     articleId: string,

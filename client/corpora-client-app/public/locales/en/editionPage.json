@@ -1,7 +1,7 @@
 {
     "metatitle": "Editions | AI metaphorization in Media Discourse",
 
-    "noArticlesMsg": "No articles under selected criteria",
+    "noArticlesMsg": "No articles within selected criteria",
     "tableRow": {
         "tableHead": {
             "annotationStatus": "Annotation Status",
@@ -22,10 +22,36 @@
             "urlLabel": "URL",
             "saveBtn": "Save"
         },
+        "DisplayArticle": {
+            "title": "Annotate & Edit",
+            "headingLabel": "Heading",
+            "publicationDateLabel": "Publication Date",
+            "urlLabel": "URL",
+            "editBtn": "Edit",
+            "saveBtn": "Save"
+        },
         "deleteArticleModal": {
             "title": "Delete article",
             "message": "Are you sure you want to delete article?",
             "submitBtn": "Confirm",
+            "cancelBtn": "Cancel"
+        }
+    },
+    "modals": {
+        "addMetaphorModal": {
+            "title": "Add new metahor case",
+            "textLabel": "Metaphor",
+            "commentLabel": "Comment",
+            "metaphorModelLabel": "Metaphor model",
+            "submitBtn": "Add",
+            "cancelBtn": "Cancel"
+        },
+        "displayMetaphorModal": {
+            "title": "Metahor case",
+            "textLabel": "Metaphor",
+            "commentLabel": "Comment",
+            "metaphorModelLabel": "Metaphor model",
+            "submitBtn": "Add",
             "cancelBtn": "Cancel"
         }
     }

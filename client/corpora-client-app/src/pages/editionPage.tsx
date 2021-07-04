@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../app/hooks';
 
 
-import { createNewArticle, deleteArticle, fetchArticlesByEditionId } from '../api/endpoints/articles';
+import { createNewArticle, deleteArticle, fetchArticlesByEditionId, updateArticleToggleAnnotated } from '../api/endpoints/articles';
 
 import { Article, Edition } from '../api/dataModels';
 
@@ -21,6 +21,7 @@ import { toast } from 'react-toastify';
 import AddNewArticleDialog from '../components/editionPage/addNewArticleDialog';
 import ArticleRow from '../components/editionPage/articleRow';
 import DeleteArticleModalDialog from '../components/editionPage/deleteArticleModal';
+import DisplayArticleDialog from '../components/editionPage/displayArticleDialog';
 
 interface EditionPageProps {
   edition: Edition
@@ -115,13 +116,20 @@ const EditionPage: React.FC<EditionPageProps> = ({
   // Article display dialog
   const [displayArticleDialogOpen, setDisplayArticleDialogOpen] = useState(false);
   const [currentlyDisplayedArticle, setCurrentlyDisplayedArticle] = useState<Article>({} as Article)
-  const [isArticlesUpdating, setIsArticleUpdating] = useState(false);
+  const [isArticlesUpdating, setIsArticlesUpdating] = useState(false);
 
 
   const handleDisplayArticle = (article: Article) => {
     setDisplayArticleDialogOpen(true);
     setCurrentlyDisplayedArticle(article)
   }
+
+  const updateCurrentlyDisplayedArticle = (article: Article) => {
+    if (currentlyDisplayedArticle) {
+      setCurrentlyDisplayedArticle({...article})
+    }
+  }
+
   // Delete article modal
   const [deleteArticleDialogOpen, setDeleteArticleDialogOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<Article>({} as Article)
@@ -150,8 +158,36 @@ const EditionPage: React.FC<EditionPageProps> = ({
     }
   }
 
-  const handleToggleArticleFullyAnnotated = async (article: Article) => {
 
+  const updateArticleInState = (article: Article) => {
+    try {
+      let workingArray = [...articles];
+
+      let oldIndex = workingArray.findIndex(a => a._id === article._id);
+
+      workingArray[oldIndex] = {...article}
+
+      console.log(workingArray[oldIndex])
+
+      setArticles(articles => [...workingArray]);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const handleToggleArticleFullyAnnotated = async (article: Article) => {
+    try {
+      setIsArticlesUpdating(true);
+      
+      let updatedArticle = await updateArticleToggleAnnotated(article._id!!);
+
+      updateArticleInState(updatedArticle);
+
+      setIsArticlesUpdating(false);
+    } catch (err) {
+      console.log(err);
+      setIsArticlesUpdating(false);
+    }
   }
 
   const handleDeleteArticle = async (
@@ -160,7 +196,7 @@ const EditionPage: React.FC<EditionPageProps> = ({
     handleClearArticleToDeleteCallback?: Function
   ) => {
     try {
-      setIsArticleUpdating(true);
+      setIsArticlesUpdating(true);
       
       let deletedArticle = await deleteArticle(article._id!!);
 
@@ -169,10 +205,10 @@ const EditionPage: React.FC<EditionPageProps> = ({
       handleCloseCallback && handleCloseCallback();
       handleClearArticleToDeleteCallback && handleClearArticleToDeleteCallback();
 
-      setIsArticleUpdating(false);
+      setIsArticlesUpdating(false);
     } catch (err) {
       console.log(err);
-      setIsArticleUpdating(false);
+      setIsArticlesUpdating(false);
     }
   }
 
@@ -248,6 +284,7 @@ const EditionPage: React.FC<EditionPageProps> = ({
 
   }, [articlesFiltered, order]);
 
+
   return (
     <>
       <Helmet
@@ -258,7 +295,7 @@ const EditionPage: React.FC<EditionPageProps> = ({
         ?
         <LinearProgress />
         :
-        <div style={{height: `.8rem`}}/>
+        <div style={{height: `4px`}}/>
       }
       <EditionPageHeading
         style={{
@@ -431,6 +468,18 @@ const EditionPage: React.FC<EditionPageProps> = ({
         handleClose={() => handleToggleNewArticleDialogOpen(false)}
         isAddArticleLoading={isAddArticleLoading}
         handleAddNewArticle={handleAddNewArticle}
+      />
+      <DisplayArticleDialog
+        article={currentlyDisplayedArticle}
+        isOpen={displayArticleDialogOpen}
+        handleClose={() => {
+          setDisplayArticleDialogOpen(false);
+          setCurrentlyDisplayedArticle({} as Article)
+        }}
+        isArticlesUpdatingLoading={isArticlesUpdating}
+        handleSetArticlesUpdatingLoading={(value: boolean) => setIsArticlesUpdating(value)}
+        handleUpdateArticleInState={updateArticleInState}
+        updateCurrentlyDisplayedArticle={updateCurrentlyDisplayedArticle}
       />
       <DeleteArticleModalDialog 
         isOpen={deleteArticleDialogOpen}

@@ -53,7 +53,8 @@ const FormContainer = styled.div`
     justify-content: flex-start;
     align-items: center;
 
-    
+
+    margin-bottom: 3rem;
 `
 
 const FormWrapper = styled.div`
@@ -77,8 +78,6 @@ const FormWrapper = styled.div`
             min-height: 450px;
         }
     }
-
-
 `
 
 const AddNewArticleDialog: React.FC<AddNewArticleDialogProps> = ({
@@ -194,7 +193,7 @@ const AddNewArticleDialog: React.FC<AddNewArticleDialogProps> = ({
                 ?
                 <LinearProgress />
                 :
-                <div style={{height: `.5rem`}}/>
+                <div style={{height: `4px`}}/>
             }
             <FormContainer>
                 <FormWrapper>
