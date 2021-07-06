@@ -124,7 +124,11 @@ exports.put_Update_Metaphor_Case = async(req, res, next) => {
             updatedDataModel
         } = req.body;
 
+        console.log(caseId)
+
         const metaphorCase = await MetaphorCase.findById(caseId);
+
+        console.log(metaphorCase)
 
         if(!metaphorCase) {
             let err = new Error('Case not found');
@@ -210,6 +214,8 @@ exports.delete_Delete_Metaphor_Case = async(req, res, next) => {
 
         article.metaphors = article.metaphors.filter(item => item._id !== caseId);
 
+        console.log(article)
+        console.log(caseId)
 
         await article.save()
         

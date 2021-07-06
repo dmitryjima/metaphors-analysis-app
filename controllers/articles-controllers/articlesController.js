@@ -67,7 +67,7 @@ exports.put_Update_Article_Body = async (req, res, next) => {
             updatedData 
         } = req.body;
 
-        let articleToUpdate = await Article.findById(id);
+        let articleToUpdate = await Article.findById(id)
 
         if(!articleToUpdate) {
             let err = new Error('Article not found');
@@ -83,7 +83,15 @@ exports.put_Update_Article_Body = async (req, res, next) => {
 
         await articleToUpdate.save()
 
-        res.json(articleToUpdate)
+        let updatedArticle = await Article
+            .findById(id)
+            .populate([
+                { path: 'edition', model: 'Edition' },
+                { path: 'metaphors', model: 'MetaphorCase'}
+            ])
+            .exec();
+
+        res.json(updatedArticle)
     } catch (err) {
         console.log(err)
         return next(err)
@@ -96,8 +104,14 @@ exports.put_Update_Article_Toggle_Annotated = async (req, res, next) => {
             id
         } = req.body;
 
-        let articleToUpdate = await Article.findById(id);
-
+        let articleToUpdate = await Article
+            .findById(id)
+            .populate([
+                { path: 'edition', model: 'Edition' },
+                { path: 'metaphors', model: 'MetaphorCase'}
+            ])
+            .exec();
+                        
         if(!articleToUpdate) {
             let err = new Error('Article not found');
             err.status = 404;
@@ -115,15 +129,20 @@ exports.put_Update_Article_Toggle_Annotated = async (req, res, next) => {
     }
 }
 
-exports.put_Update_Article_Comment_Tone = async (req, res, next) => {
+exports.put_Update_Article_Tone = async (req, res, next) => {
     try {
         const { 
             id,
-            comment, 
             tone
         } = req.body;
 
-        let articleToUpdate = await Article.findById(id);
+        let articleToUpdate = await Article
+            .findById(id)
+            .populate([
+                { path: 'edition', model: 'Edition' },
+                { path: 'metaphors', model: 'MetaphorCase'}
+            ])
+            .exec();
 
         if(!articleToUpdate) {
             let err = new Error('Article not found');
@@ -131,13 +150,39 @@ exports.put_Update_Article_Comment_Tone = async (req, res, next) => {
             throw err;
         }
 
-        if (comment) {
-            articleToUpdate.comment = comment
+        articleToUpdate.tone = tone
+
+        await articleToUpdate.save()
+
+        res.json(articleToUpdate)
+    } catch (err) {
+        console.log(err)
+        return next(err)
+    }
+}
+
+exports.put_Update_Article_Comment = async (req, res, next) => {
+    try {
+        const { 
+            id,
+            comment
+        } = req.body;
+
+        let articleToUpdate = await Article
+            .findById(id)
+            .populate([
+                { path: 'edition', model: 'Edition' },
+                { path: 'metaphors', model: 'MetaphorCase'}
+            ])
+            .exec();
+
+        if(!articleToUpdate) {
+            let err = new Error('Article not found');
+            err.status = 404;
+            throw err;
         }
 
-        if (tone) {
-            articleToUpdate.tone = tone
-        }
+        articleToUpdate.comment = comment
 
         await articleToUpdate.save()
 

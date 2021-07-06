@@ -1,7 +1,7 @@
 {
     "metatitle": "Editions | AI metaphorization in Media Discourse",
-
     "noArticlesMsg": "No articles within selected criteria",
+    "rowsPerPage": "Rows per page",
     "tableRow": {
         "tableHead": {
             "annotationStatus": "Annotation Status",
@@ -13,6 +13,10 @@
             "tone": "Tone",
             "metaphors": "Metaphors"
         }
+    },
+    "toolBox": {
+        "toneLabel": "Article tone",
+        "commentLabel": "Comment"
     },
     "dialogs": {
         "AddNewArticle": {
@@ -27,19 +31,25 @@
             "headingLabel": "Heading",
             "publicationDateLabel": "Publication Date",
             "urlLabel": "URL",
+            "listOfMetaphors": "The list of metaphors",
+            "addNewMetaphorCasePopUp": "Add new metaphor case",
+            "duplicateWarning": "Duplicate text, please choose more precise range!",
             "editBtn": "Edit",
-            "saveBtn": "Save"
-        },
+            "saveBtn": "Save",
+            "cancelBtn": "Cancel"
+        }
+    },
+    "modals": {
         "deleteArticleModal": {
             "title": "Delete article",
             "message": "Are you sure you want to delete article?",
             "submitBtn": "Confirm",
             "cancelBtn": "Cancel"
-        }
-    },
-    "modals": {
+        },
         "addMetaphorModal": {
             "title": "Add new metahor case",
+            "heading": "Article Heading",
+            "body": "Article Body",
             "textLabel": "Metaphor",
             "commentLabel": "Comment",
             "metaphorModelLabel": "Metaphor model",
@@ -49,9 +59,11 @@
         "displayMetaphorModal": {
             "title": "Metahor case",
             "textLabel": "Metaphor",
+            "confirmDeleteBtn": "Delete",
+            "cancelDeleteBtn": "Cancel",
             "commentLabel": "Comment",
             "metaphorModelLabel": "Metaphor model",
-            "submitBtn": "Add",
+            "submitBtn": "Save",
             "cancelBtn": "Cancel"
         }
     }

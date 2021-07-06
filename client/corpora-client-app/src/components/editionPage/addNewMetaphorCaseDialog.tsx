@@ -1,53 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { useTranslation } from 'react-i18next';
 
-
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-
-
-import { Article, Edition, MetaphorCase, MetaphorModel } from '../../api/dataModels';
-import { handleAddNewEdition } from '../../slices/editionsSlice';
 import { createNewMetaphorCase, fetchAllMetaphorModels } from '../../api/endpoints/metaphors';
+import { Article, MetaphorCase, MetaphorModel } from '../../api/dataModels';
 
+
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 interface AddNewMetaphorModalDialogProps {
     isOpen: boolean,
     handleClose: Function,
     potentialMetaphorCase?: MetaphorCase | null,
+    isArticlesUpdatingLoading: boolean,
     handleSetArticlesUpdatingLoading: (value: boolean) => void,
     handleUpdateArticleInState: (article: Article) => void,
     updateCurrentlyDisplayedArticle: (article: Article) => void
 }
 
-const defaultEditionInEdit: Edition = {
-    name: '',
-    lang: 'en',
-}
-
-const languagesOptions = [
-    'en',
-    'ru',
-    'zh'
-]
 
 const AddNewMetaphorModalDialog: React.FC<AddNewMetaphorModalDialogProps> = ({
     isOpen,
     handleClose,
     potentialMetaphorCase,
+    isArticlesUpdatingLoading,
     handleSetArticlesUpdatingLoading,
     handleUpdateArticleInState,
     updateCurrentlyDisplayedArticle
 }) => {
-    const { t, i18n, ready } = useTranslation('editionPage');
+    const { t } = useTranslation('editionPage');
 
     // Metaphor models
     const [metaphorModels, setMetaphorModels] = useState<MetaphorModel[]>([]);
     const [isMetaphorModelsLoading, setIsMetaphorModelsLoading] = useState(false);
 
-    // Adding new edition
+    // Adding new metaphor
     const [metaphorInEdit, setMetaphorInEdit] = useState(potentialMetaphorCase ? potentialMetaphorCase : {} as MetaphorCase)
     const [dataModelValue, setDataModelValue] = useState<MetaphorModel | null>({} as MetaphorModel)
     const [inputDataModelValue, setDataModelInputValue] = useState('')
@@ -60,9 +48,7 @@ const AddNewMetaphorModalDialog: React.FC<AddNewMetaphorModalDialogProps> = ({
                 metaphorInEdit.sourceArticleId!!, 
                 metaphorInEdit, 
                 metaphorInEdit.metaphorModel
-                )
-
-            console.log(res);
+            )
 
             handleUpdateArticleInState(res.updatedArticle);
 
@@ -83,7 +69,7 @@ const AddNewMetaphorModalDialog: React.FC<AddNewMetaphorModalDialogProps> = ({
     // Form valid state
     const [formValid, setFormValid] = useState(false)
 
-    const validateEditionInEdit = (metaphorCase: MetaphorCase) => {
+    const validateMetaphorInEdit = (metaphorCase: MetaphorCase) => {
         if(metaphorInEdit?.text && metaphorInEdit.metaphorModel) {
             setFormValid(true)
         } else {
@@ -119,16 +105,7 @@ const AddNewMetaphorModalDialog: React.FC<AddNewMetaphorModalDialogProps> = ({
     }, [potentialMetaphorCase]);
 
     useEffect(() => {
-        console.log(dataModelValue)
-        console.log(inputDataModelValue)
-
-
-        
-
-    }, [inputDataModelValue, dataModelValue])
-
-    useEffect(() => {
-        validateEditionInEdit(metaphorInEdit)
+        validateMetaphorInEdit(metaphorInEdit)
     }, [metaphorInEdit]);
 
     return (
@@ -141,7 +118,7 @@ const AddNewMetaphorModalDialog: React.FC<AddNewMetaphorModalDialogProps> = ({
             handleClose();
           }}
         >
-            <DialogTitle>{t(`modals.addMetaphorModal.title`)}</DialogTitle>
+            <DialogTitle>{t(`modals.addMetaphorModal.title`)} <br/> ({t(`modals.addMetaphorModal.${metaphorInEdit.location}`)})</DialogTitle>
             <DialogContent>
                 <div
                     style={{
@@ -229,7 +206,7 @@ const AddNewMetaphorModalDialog: React.FC<AddNewMetaphorModalDialogProps> = ({
                 <Button
                     color="primary" 
                     onClick={() => handleAddNewMetaphorCase()}
-                    disabled={!formValid}
+                    disabled={isArticlesUpdatingLoading || !formValid}
                 >
                     {t(`modals.addMetaphorModal.submitBtn`)}
                 </Button>
@@ -238,7 +215,7 @@ const AddNewMetaphorModalDialog: React.FC<AddNewMetaphorModalDialogProps> = ({
                     onClick={() => {
                         handleClose();
                     }}
-                    //disabled={isMetaphorModelsLoading}
+                    disabled={isArticlesUpdatingLoading}
                 >
                     {t(`modals.addMetaphorModal.cancelBtn`)}
                 </Button>

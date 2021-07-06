@@ -144,10 +144,11 @@ export async function updateMetaphorModel(
  * @async
  * @function deleteMetaphorCase
 */
-export async function deleteMetaphorCase(id: string): Promise<DeleteMetaphorCaseReturn> {
+export async function deleteMetaphorCase(articleId: string, caseId: string): Promise<DeleteMetaphorCaseReturn> {
 
     const payload = {
-        id
+        articleId, 
+        caseId
     }
 
     const { data } = await axios.delete(

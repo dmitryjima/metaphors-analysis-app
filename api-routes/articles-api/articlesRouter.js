@@ -19,7 +19,9 @@ router.put('/update_article_body', articles_Controller.put_Update_Article_Body);
 
 router.put('/update_article_toggle_annotated', articles_Controller.put_Update_Article_Toggle_Annotated);
 
-router.put('/update_article_comment_tone', articles_Controller.put_Update_Article_Comment_Tone);
+router.put('/update_article_tone', articles_Controller.put_Update_Article_Tone);
+
+router.put('/update_article_comment', articles_Controller.put_Update_Article_Comment);
 
 // @Delete
 router.delete('/delete', articles_Controller.delete_Delete_Article);

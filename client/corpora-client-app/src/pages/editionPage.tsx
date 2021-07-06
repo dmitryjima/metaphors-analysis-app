@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet';
 
-
 import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '../app/hooks';
-
-
 import { createNewArticle, deleteArticle, fetchArticlesByEditionId, updateArticleToggleAnnotated } from '../api/endpoints/articles';
-
 import { Article, Edition } from '../api/dataModels';
 
-
+// Styling
 import styled from 'styled-components';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import { Checkbox, IconButton, InputLabel, LinearProgress, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, TableSortLabelTypeMap, Typography } from '@material-ui/core';
+import { CircularProgress, IconButton, InputLabel, LinearProgress, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography } from '@material-ui/core';
 
-// Toasts
-import { toast } from 'react-toastify';
-import AddNewArticleDialog from '../components/editionPage/addNewArticleDialog';
+// Components
 import ArticleRow from '../components/editionPage/articleRow';
+import AddNewArticleDialog from '../components/editionPage/addNewArticleDialog';
 import DeleteArticleModalDialog from '../components/editionPage/deleteArticleModal';
 import DisplayArticleDialog from '../components/editionPage/displayArticleDialog';
+
+// Utils
+import useWindowSize from '../utils/useWindowResize';
 
 interface EditionPageProps {
   edition: Edition
@@ -46,39 +44,36 @@ const EditionPageHeading = styled.div`
     margin-right: 1rem;
   }
 
-  button {
-
-  }
 `
 
 const EditionPageTableContainer = styled.div`
   overflow-y: auto;
-
 `
-
 
 
 const EditionPage: React.FC<EditionPageProps> = ({
   edition
 }) => {
-  const { t, i18n, ready } = useTranslation("editionPage");
-
+  // Global state & translations
+  const { t, i18n } = useTranslation("editionPage");
   const { user: userState } = useAppSelector(state => state);
+  
+  // Window width
+  const { width } = useWindowSize();
 
   // Articles state and handlers
   const [articles, setArticles] = useState<Array<Article>>([] as Article[]);
   const [isArticlesLoading, setIsArticlesLoading] = useState(false);
 
-
   // Pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(50);
 
-  // Filtered
+  // Filtered articles
   const [articlesFiltered, setArticlesFiltered] = useState<Array<Article>>([] as Article[]);
   const [annotationFilter, setAnnotationFilter] = useState<string | undefined>(``);
   
-  // Sorted
+  // Sorted articles
   const [articlesSorted, setArticlesSorted] = useState<Array<Article>>([] as Article[]);
   const [order, setOrder] = React.useState({
     dir: 'asc' as any,
@@ -113,7 +108,7 @@ const EditionPage: React.FC<EditionPageProps> = ({
 
 
 
-  // Article display dialog
+  // Display article dialog
   const [displayArticleDialogOpen, setDisplayArticleDialogOpen] = useState(false);
   const [currentlyDisplayedArticle, setCurrentlyDisplayedArticle] = useState<Article>({} as Article)
   const [isArticlesUpdating, setIsArticlesUpdating] = useState(false);
@@ -126,14 +121,13 @@ const EditionPage: React.FC<EditionPageProps> = ({
 
   const updateCurrentlyDisplayedArticle = (article: Article) => {
     if (currentlyDisplayedArticle) {
-      setCurrentlyDisplayedArticle({...article})
+      setCurrentlyDisplayedArticle({...article});
     }
   }
 
   // Delete article modal
   const [deleteArticleDialogOpen, setDeleteArticleDialogOpen] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<Article>({} as Article)
-
 
   const handleSetArticleStagedForDelete = (article: Article) => {
     setDeleteArticleDialogOpen(true);
@@ -333,13 +327,12 @@ const EditionPage: React.FC<EditionPageProps> = ({
       </EditionPageHeading>
       <EditionPageTableContainer>
         <TableContainer style={{overflowX: "initial"}}>
-          <Table 
-            
+          <Table  
             stickyHeader
           >
-            {/* Domains table head: sort, select, update multiple, delete multiple */}
             <TableHead >
               <TableRow>
+                {/* Sort by annotation status */}
                 <TableCell 
                   style={{
                     width: '160px', 
@@ -374,14 +367,12 @@ const EditionPage: React.FC<EditionPageProps> = ({
                     </MenuItem>
                   </Select>
                 </TableCell>
-
-                {/* Sort by domain name */}
-                <TableCell style={{width: '25%'}} align="left">
+                {/* Heading */}
+                <TableCell style={{width: '25%', minWidth: `8rem`}} align="left">
                   <Typography variant="subtitle1">
                     {t(`tableRow.tableHead.heading`)}
                   </Typography>
                 </TableCell>
-
                 {/* Sort by date */}
                 <TableCell style={{width: '20%', minWidth: '210px',}} align="left">
                   <TableSortLabel
@@ -402,8 +393,8 @@ const EditionPage: React.FC<EditionPageProps> = ({
                     </Typography>
                 </TableCell>
 
-                {/* Sort by metaphors */}
-                <TableCell style={{width: '15%', paddingLeft: `2.5rem`}} align="center">
+                {/* Sort by number of metaphors */}
+                <TableCell style={{width: '15%', paddingLeft: `2.5rem`, minWidth: `8rem`}} align="center">
                   <TableSortLabel
                     active={order.orderBy === 'metaphors'}
                     direction={order.orderBy === 'metaphors' ? order.dir : 'asc'}
@@ -422,6 +413,9 @@ const EditionPage: React.FC<EditionPageProps> = ({
             </TableHead>
             <TableBody >
               {
+                !isArticlesLoading
+                ?
+                (
                 articlesSorted && articlesSorted.length > 0
                 ?
                 articlesSorted.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(article => (
@@ -436,16 +430,21 @@ const EditionPage: React.FC<EditionPageProps> = ({
                 ))
                 :
                 <TableRow>
-                  <TableCell align="center" colSpan={7}>
+                  <TableCell align="left" colSpan={6}>
                     {t(`noArticlesMsg`)}
                   </TableCell>
                 </TableRow>
+                )
+                :
+                <CircularProgress/>
               }
             </TableBody>
           </Table>
         </TableContainer>
         <div style={{marginTop: 'auto'}}>
           <TablePagination
+            lang={i18n.language}
+            labelRowsPerPage={width < 1024 ? '' : t(`rowsPerPage`)}
             rowsPerPageOptions={[5, 10, 20, 30, 50, 100, 150]}
             component="div"
             count={articles.length}
@@ -461,7 +460,7 @@ const EditionPage: React.FC<EditionPageProps> = ({
           />
         </div>
       </EditionPageTableContainer>
-      {/* Dialogs */}
+      {/* Dialogs & Modals */}
       <AddNewArticleDialog
         edition={edition}
         isOpen={addNewArticleDialogOpen}

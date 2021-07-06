@@ -8,8 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { _setSidebarOpen } from '../../slices/uiSlice';
 
-// Styled components
-import styled from 'styled-components';
+// Stylings
 import { Drawer, ListItem, ListItemIcon, ListItemText, makeStyles, SwipeableDrawer } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -34,7 +33,7 @@ interface SidebarProps {
 const SidebarMobile: React.FC<SidebarProps> = ({
     availableLanguages
 }) => {
-    const { t, i18n, ready } = useTranslation("sidebar");
+    const { t } = useTranslation("sidebar");
 
     const dispatch = useAppDispatch();
     const { ui: uiState, editions: editionsState } = useAppSelector(state => state)

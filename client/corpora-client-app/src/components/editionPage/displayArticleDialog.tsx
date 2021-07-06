@@ -1,26 +1,42 @@
-import React, { useState, useEffect, useRef, MutableRefObject } from 'react'
+import React, { useState, useEffect } from 'react'
 
+// State & handlers
+import { useTranslation } from 'react-i18next';
+
+import { useAppSelector } from '../../app/hooks';
+import { updateArticleBody, updateArticleComment, updateArticleTone } from '../../api/endpoints/articles';
+import { Article, MetaphorCase, MetaphorModel } from '../../api/dataModels';
+
+
+// Trix editor
 import "trix/dist/trix";
 import "trix/dist/trix.css";
 import { TrixEditor } from "react-trix";
 
 
-import { useTranslation } from 'react-i18next';
-
-
-import { Article, MetaphorCase, MetaphorModel } from '../../api/dataModels';
-
-
-
-import { AppBar, Button, createStyles, Dialog, Divider, IconButton, LinearProgress, List, ListItem, ListItemText, makeStyles, Menu, MenuItem, Slide, TextField, Theme, Toolbar, Typography } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/CloseOutlined'
-import { TransitionProps } from '@material-ui/core/transitions/transition';
+// Stylings
 import styled from 'styled-components';
+import { AppBar, Button, createStyles, Dialog, Fab, IconButton, LinearProgress, makeStyles, Menu, MenuItem, Slide, TextField, Theme, Toolbar, Typography } from '@material-ui/core';
+import { TransitionProps } from '@material-ui/core/transitions/transition';
 import { KeyboardDatePicker } from '@material-ui/pickers';
+import Zoom from '@material-ui/core/Zoom';
+import CloseIcon from '@material-ui/icons/CloseOutlined'
+import AddIcon from '@material-ui/icons/Add'
+import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
+
+// Components
 import AddNewMetaphorModalDialog from './addNewMetaphorCaseDialog';
 import DisplayMetaphorCaseModalDialog from './displayMetaphorCaseDialog';
+
+
+// Toasts
 import { toast } from 'react-toastify';
-import { useAppSelector } from '../../app/hooks';
+
+// Utils
+import useWindowSize from '../../utils/useWindowResize';
+import { articleToneColorSwitch } from './articleRow';
 
 
 interface DisplayArticleDialogProps {
@@ -58,7 +74,6 @@ const FormContainer = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-
 
     margin-bottom: 3rem;
 `
@@ -98,6 +113,117 @@ const FormWrapper = styled.div`
     }
 `
 
+const ToolBox = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    margin-bottom: 3rem;
+
+
+    @media(min-width: 1325px) {
+        position: fixed;
+        right: 1rem;
+        top: 6rem;
+
+        width: calc(50vw - 400px);
+
+        padding: initial;
+        margin: initial;
+    } 
+`
+
+interface ArticleToneMarkerProps {
+    bgColor: string
+}
+
+
+const ArticleToneMarker = styled.div<ArticleToneMarkerProps>`
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    border-width: 4px;
+    border-style: solid;
+    border: transparent;
+
+    background-color: ${
+        props => (
+            props.bgColor
+        )
+    };
+`
+
+const SelectToneWidgetStyled = styled.div`
+    display: flex;
+    justify-content: space-around;
+`
+
+interface ArticleToneMarkerSelectProps {
+    bgColor: string,
+    isSelected: boolean
+}
+
+
+const ArticleToneMarkerSelect = styled.div<ArticleToneMarkerSelectProps>`
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+
+    border-width: 4px;
+    border-style: solid;
+
+    transition: .2s ease-in-out;
+    cursor: pointer;
+
+    background-color: ${
+        props => (
+            props.bgColor
+        )
+    };
+    border-color: ${
+        props => (
+            props.isSelected ? `#a594f9` : `transparent`
+        )
+    };
+`
+interface SelectToneWidgetProps {
+    article: Article,
+    isLoading: boolean,
+    handleUpdateArticleTone: (tone: string) => void
+}
+
+const SelectToneWidget: React.FC<SelectToneWidgetProps> = ({
+    article,
+    isLoading,
+    handleUpdateArticleTone
+}) => {
+    const options = [
+        'positive',
+        'negative',
+        'neutral'
+    ]
+
+    return (
+        <SelectToneWidgetStyled>
+            {
+                options.map(o => (
+                    <ArticleToneMarkerSelect
+                        bgColor={articleToneColorSwitch(o)}
+                        isSelected={article.tone === o}
+                        onClick={() => {
+                            if (isLoading) return
+                            handleUpdateArticleTone(o)
+                        }}
+                    />
+                ))
+            }
+        </SelectToneWidgetStyled>
+    )
+}
+
+
 const tagsToIgnore = [
     `<div>`,
     `<div>`,
@@ -126,14 +252,104 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
     handleUpdateArticleInState,
     updateCurrentlyDisplayedArticle
 }) => {
-    const { t, i18n, ready } = useTranslation("editionPage");
+    const { t } = useTranslation("editionPage");
     const { user: userState } = useAppSelector(state => state);
+    const classes = useStyles();
+
+    const { width } = useWindowSize()
 
     // View mode - view and edit
     const [viewMode, setViewMode] = useState('view');
+    const [articleInEdit, setArticleInEdit] = useState(article);
 
-    const classes = useStyles();
+    const handleHeadingInput = (value: string) => {
+        let workingObject = {...articleInEdit};
+        workingObject.heading = value;
+        setArticleInEdit({...workingObject});
+    }
 
+    const handleBodyInput = (value: string) => {
+        let workingObject = {...articleInEdit};
+        workingObject.body = value;
+        setArticleInEdit({...workingObject});
+    }
+
+    const handleURLInput = (value: string) => {
+        let workingObject = {...articleInEdit};
+        workingObject.url = value;
+        setArticleInEdit({...workingObject});
+    }
+
+    const handleDateInput = (value: Date | null) => {
+        let workingObject = {...articleInEdit};
+        workingObject.publication_date = value;
+        setArticleInEdit({...workingObject});
+    }
+
+    const handleUpdateArticleBody = async (articleToUpdate: Article) => {
+        try {
+            handleSetArticlesUpdatingLoading(true);
+
+            let res = await updateArticleBody(articleToUpdate);
+            
+            setArticleInEdit(res)
+            handleUpdateArticleInState(res);
+            updateCurrentlyDisplayedArticle(res);
+
+            handleSetArticlesUpdatingLoading(false);
+
+            setViewMode('view');
+        } catch (err) {
+            handleSetArticlesUpdatingLoading(false);
+            console.log(err);
+        }
+    }
+
+    const handleUpdateArticleTone = async (newTone: string) => {
+        try {
+            handleSetArticlesUpdatingLoading(true);
+
+            let res = await updateArticleTone(
+                article._id!!,
+                newTone
+            );
+
+            handleUpdateArticleInState(res);
+            updateCurrentlyDisplayedArticle(res);
+            
+            handleSetArticlesUpdatingLoading(false);
+        } catch (err) {
+            handleSetArticlesUpdatingLoading(false);
+            console.log(err);
+        }
+    }
+
+    const [commentInEdit, setCommentInEdit] = useState(article.comment);
+    const [isCommentEdited, setCommentEdited] = useState(false);
+
+    const handleUpdateArticleComment = async (comment: string) => {
+        try {
+            handleSetArticlesUpdatingLoading(true);
+
+            let res = await updateArticleComment(
+                article._id!!,
+                comment
+            );
+
+            handleUpdateArticleInState(res);
+            updateCurrentlyDisplayedArticle(res);
+
+            setCommentEdited(false);
+            setCommentInEdit(comment);
+            
+            handleSetArticlesUpdatingLoading(false);
+        } catch (err) {
+            handleSetArticlesUpdatingLoading(false);
+            console.log(err);
+        }
+    }
+
+    // Annotations
     const [articleAnnotatedBody, setArticleAnnotatedBody] = useState(article.body);
     const [articleAnnotatedHeading, setArticleAnnotatedHeading] = useState(article.heading);
 
@@ -155,6 +371,10 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
     const handleCloseAndClearDisplayMetaphorCaseDialog = () => {
         setIsDisplayMetaphorDialogOpen(false);
         setCurrentlyDisplayedMetaphorCase(null);
+    }
+
+    const handleUpdateDisplayedMetaphorCase = (metaphor: MetaphorCase) => {
+        setCurrentlyDisplayedMetaphorCase({...metaphor});
     }
 
     const [mouseState, setMouseState] = React.useState<{
@@ -227,9 +447,6 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
             return
         }    
 
-        console.log(start)
-        console.log(end)
-
         let ranges = [];
         let start2 = 0;
         let end2 = 0;
@@ -240,13 +457,13 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                 end2 = start2 + (selectionTarget?.length ?? 0)
 
                 ranges.push([start2, end2])
+
+                if(ranges.length > 1) break;
             } 
         }
 
-        console.log(ranges)
-
         if (ranges.length > 1) {
-            toast.warning(`Duplicate text, please choose more precise range!`)
+            toast.warning(t(`dialogs.DisplayArticle.duplicateWarning`))
             setPotentialMetaphorCase(null);
             return
         }
@@ -259,8 +476,6 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
             sourceArticleId: article._id
         }
 
-        console.log(potentialMetaphor)
-
         setPotentialMetaphorCase(potentialMetaphor);
     }
 
@@ -270,9 +485,8 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
         let range: Range
         if (window.getSelection) {
 
-            // W3C Ranges
             userSelection = window.getSelection();
-            // Get the range:
+            // Get the range
             if (userSelection?.getRangeAt)
                 range = userSelection.getRangeAt(0);
             else {
@@ -283,7 +497,7 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                 }
             }
 
-            // And the HTML:
+            // Get HTML
             let clonedSelection = range.cloneContents();
             let div = document.createElement('div');
             div.appendChild(clonedSelection);
@@ -305,10 +519,7 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
         let workingBody = article.body!!;
         let workingHeading = article.heading;
 
-        console.log(article.metaphors)
-
         const meLength = 83
-
 
         if (article.metaphors && article.metaphors?.length > 0) {
             let headingMetaphors = article.metaphors.filter(m => m.location === 'heading').sort((a, b) => {
@@ -328,10 +539,7 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
 
             if (bodyMetaphors && bodyMetaphors.length > 0 ) {
                 let accumulator = 0
-                for (let metaphor of bodyMetaphors) {
-                    console.log(metaphor);
-                    console.log(accumulator);
-    
+                for (let metaphor of bodyMetaphors) {   
                     let locationText = workingBody
                     
                     locationText = [
@@ -342,8 +550,6 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                         locationText?.slice(metaphor.char_range[1] + accumulator),
                     ].join('')
     
-                    console.log(metaphor.char_range[1] - metaphor.char_range[0])
-    
                     accumulator += meLength;
     
                     workingBody = locationText
@@ -352,10 +558,7 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
 
             if (headingMetaphors && headingMetaphors.length > 0 ) {
                 let accumulator = 0
-                for (let metaphor of headingMetaphors) {
-                    console.log(metaphor);
-                    console.log(accumulator);
-    
+                for (let metaphor of headingMetaphors) {   
                     let locationText = workingHeading
                     
                     locationText = [
@@ -365,8 +568,6 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                         `</span>`,
                         locationText?.slice(metaphor.char_range[1] + accumulator),
                     ].join('')
-    
-                    console.log(metaphor.char_range[1] - metaphor.char_range[0])
     
                     accumulator += meLength;
     
@@ -386,8 +587,10 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
             open={isOpen} 
             onClose={() => {
                 handleClose();
+                setViewMode('view');
             }} 
             TransitionComponent={Transition}
+            
         >
             <AppBar className={classes.appBar}>
                 <Toolbar>
@@ -396,6 +599,7 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                         color="inherit" 
                         onClick={() => {
                             handleClose();
+                            setViewMode('view');
                         }} 
                         aria-label="close"
                         disabled={isArticlesUpdatingLoading}
@@ -416,22 +620,38 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                             color="inherit" 
                             onClick={() => {
                                 setViewMode('edit');
+                                let workingObject = {...article}
+                                setArticleInEdit(workingObject);
                             }}
                             disabled={isArticlesUpdatingLoading}
                         >
                             {t(`dialogs.DisplayArticle.editBtn`)}
                         </Button>
                         :
+                        <>
                         <Button 
                             autoFocus 
                             color="inherit" 
                             onClick={() => {
-
+                                handleUpdateArticleBody(articleInEdit);
                             }}
                             disabled={isArticlesUpdatingLoading}
                         >
                             {t(`dialogs.DisplayArticle.saveBtn`)}
                         </Button>
+                        <Button 
+                            autoFocus 
+                            color="inherit" 
+                            onClick={() => {
+                                setViewMode('view');
+                                let workingObject = {...article}
+                                setArticleInEdit(workingObject);
+                            }}
+                            disabled={isArticlesUpdatingLoading}
+                        >
+                            {t(`dialogs.DisplayArticle.cancelBtn`)}
+                        </Button>
+                        </>
                         )
                         :
                         null
@@ -446,6 +666,119 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                 <div style={{height: `4px`}}/>
             }
             <FormContainer>
+                {
+                viewMode === 'edit' && userState.isAuthenticated
+                ?
+                <FormWrapper>
+                    <div
+                        style={{
+                            paddingTop: '.3rem',
+                            paddingBottom: '.3rem',
+                            marginBottom: '2rem'
+                        }}
+                    >
+                        {
+                        article.metaphors && article.metaphors.length > 0
+                        ?
+                        <h2
+                            dangerouslySetInnerHTML={{
+                                __html: article.heading
+                            }}
+                        />
+                        :
+                        <TextField
+                            style={{
+                                width: `100%`
+                            }}
+                            label={t(`dialogs.AddNewArticle.headingLabel`)}
+                            value={articleInEdit.heading}
+                            disabled={isArticlesUpdatingLoading}
+                            onChange={(e) => {
+                                handleHeadingInput(e.target.value)
+                            }}
+                        />
+                        }
+                    </div>
+                    <div
+                        style={{
+                            display: `flex`,
+                            justifyContent: `space-between`,
+                            alignItems: `center`
+                        }}
+                    >
+                    <div
+                        style={{
+                            paddingTop: '.3rem',
+                            paddingBottom: '.3rem',
+                            marginBottom: '2rem',
+                            width: `50%`
+                        }}
+                    >
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd/MM/yyyy"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label={t(`dialogs.AddNewArticle.publicationDateLabel`)}
+                            value={articleInEdit.publication_date}
+                            onChange={(date: Date | null, val) => {
+                                handleDateInput(date);
+                            }}
+                            allowKeyboardControl
+                            disabled={isArticlesUpdatingLoading}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                            
+                        />
+                    </div>
+                    <div
+                        style={{
+                            paddingTop: '.7rem',
+                            paddingBottom: '.3rem',
+                            marginBottom: '2rem',
+                            width: `45%`
+                        }}
+                    >
+                        <TextField
+                            style={{
+                                width: `100%`
+                            }}
+                            label={t(`dialogs.AddNewArticle.urlLabel`)}
+                            value={articleInEdit.url}
+                            disabled={isArticlesUpdatingLoading}
+                            onChange={(e) => {
+                                handleURLInput(e.target.value)
+                            }}
+                        />
+                    </div>
+                    </div>
+                    {
+                        article.metaphors && article.metaphors.length > 0
+                        ?
+                        <div
+                        className="articleAnnotatedBody"
+                        >
+                            <div
+                                className="articleAnnotatedBody__containerDiv"
+                                dangerouslySetInnerHTML={{
+                                    __html: article.body!!
+                                }}
+                            />
+                        </div>
+                        :
+                        <TrixEditor 
+                            className="trixEditorCustom"
+                            mergeTags={[]}
+                            value={articleInEdit.body}
+                            onChange={(html, text) => {
+                                handleBodyInput(html);
+                            }}
+                        />
+                    }
+                </FormWrapper>
+                :
                 <FormWrapper>
                     <div
                         style={{
@@ -462,20 +795,12 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                                 width: `100%`,
                                 cursor: 'context-menu'
                             }}
-                            // label={t(`dialogs.DisplayArticle.headingLabel`)}
-                            // value={articleAnnotatedHeading}
-                            // disabled={true}
-                            // onChange={(e) => {
-                                
-                            // }}
                             onClick={(e) => {
                                 let el = e.target as HTMLElement
                                 
                                 if(el?.className !== 'metaphorCaseSpan') return 
 
-                                console.log(el)
                                 let metaphorId= el.id.slice(15)
-                                console.log(metaphorId)
 
                                 let metaphorToDisplay = article.metaphors?.find(m => m._id === metaphorId);
 
@@ -485,7 +810,7 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                                 }
                             }}
                             onContextMenu={handleContextMenuClick} 
-                            onMouseUp={() => {
+                            onPointerUp={() => {
                                 handleSelection(LocationEnum.heading);
                             }}
                         />
@@ -516,7 +841,7 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                             onChange={(date: Date | null, val) => {
                             }}
                             allowKeyboardControl
-                            disabled={true}
+                            readOnly={true}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
@@ -525,22 +850,18 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                     </div>
                     <div
                         style={{
-                            paddingTop: '.7rem',
+                            paddingTop: '2.75rem',
                             paddingBottom: '.3rem',
                             marginBottom: '2rem',
                             width: `45%`
                         }}
                     >
-                        <TextField
-                            style={{
-                                width: `100%`
-                            }}
-                            label={t(`dialogs.DisplayArticle.urlLabel`)}
-                            value={article.url}
-                            disabled={true}
-                            onChange={(e) => {
-                            }}
-                        />
+                        <a
+                            target="blank"
+                            href={article.url}
+                        >
+                            {article.url && article.url.length > 20 ? `${article.url.substr(0, 17)}...` : article.url}
+                        </a>
                     </div>
                     </div>
                     <div
@@ -554,18 +875,16 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                                 __html: articleAnnotatedBody!!
                             }}
 
-                            onMouseUp={() => {
+                            onPointerUp={() => {
                                 handleSelection(LocationEnum.body);
                             }}
 
                             onClick={(e) => {
                                 let el = e.target as HTMLElement
                                 
-                                if(el?.className !== 'metaphorCaseSpan') return 
+                                if (el?.className !== 'metaphorCaseSpan') return 
 
-                                console.log(el)
                                 let metaphorId= el.id.slice(15)
-                                console.log(metaphorId)
 
                                 let metaphorToDisplay = article.metaphors?.find(m => m._id === metaphorId);
 
@@ -576,6 +895,46 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                             }}
                         />
                     </div>
+                    {
+                        article.metaphors && article.metaphors.length > 0 
+                        ?
+                        <h3>
+                            {t(`dialogs.DisplayArticle.listOfMetaphors`)}
+                        </h3>
+                        :
+                        null
+                    }
+                    {
+                        article.metaphors && article.metaphors.map((m, i) => (
+                            <div
+                                key={m._id}
+                                style={{
+                                    marginBottom: '.5rem',
+                                    cursor: `pointer`,
+                                    textIndent: `.5rem`
+                                }}
+                                onClick={() => {
+                                    let metaphorToDisplay = article.metaphors?.find(item => m._id === item._id);
+
+                                    if (metaphorToDisplay) {
+                                        setCurrentlyDisplayedMetaphorCase(metaphorToDisplay);
+                                        setIsDisplayMetaphorDialogOpen(true);
+                                    }
+                                }}
+                            >
+                                <strong
+                                    style={{
+                                        marginRight: `1rem`
+                                    }}
+                                >
+                                    {i + 1})
+                                </strong>
+                                <span>
+                                    {m.text}
+                                </span>
+                            </div>
+                        ))
+                    }
                     <Menu
                         keepMounted
                         open={mouseState.mouseY !== null}
@@ -596,30 +955,184 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
                                     setIsAddNewMetaphorDialogOpen(true);
                                 }}
                             >
-                                Add new metaphor case
+                                {t(`dialogs.DisplayArticle.addNewMetaphorCasePopUp`)}
                             </MenuItem>
                             :
                             null
                         }
                     </Menu>
                 </FormWrapper>
+                }
             </FormContainer>
             <AddNewMetaphorModalDialog
                 isOpen={isAddNewMetaphorDialogOpen}
                 handleClose={handleCloseAndClearAddMetaphorCaseDialog}
                 potentialMetaphorCase={potentialMetaphorCase}
+                isArticlesUpdatingLoading={isArticlesUpdatingLoading}
                 handleSetArticlesUpdatingLoading={handleSetArticlesUpdatingLoading}
                 handleUpdateArticleInState={handleUpdateArticleInState}
                 updateCurrentlyDisplayedArticle={updateCurrentlyDisplayedArticle}
             />
             <DisplayMetaphorCaseModalDialog
+                article={article}
                 isOpen={isDisplayMetaphorDialogOpen}
                 handleClose={handleCloseAndClearDisplayMetaphorCaseDialog}
                 metaphorCase={currentlyDisplayedMetaphorCase}
+                handleUpdateDisplayedMetaphorCase={handleUpdateDisplayedMetaphorCase}
+                isArticlesUpdatingLoading={isArticlesUpdatingLoading}
                 handleSetArticlesUpdatingLoading={handleSetArticlesUpdatingLoading}
                 handleUpdateArticleInState={handleUpdateArticleInState}
                 updateCurrentlyDisplayedArticle={updateCurrentlyDisplayedArticle}
             />
+            {
+                width < 1024
+                ?
+                <Zoom
+                    in={potentialMetaphorCase !== null}
+                    timeout={200}
+                    style={{
+                    transitionDelay: `100ms`,
+                    }}
+                >
+                    <Fab 
+                        style={{
+                            position: `fixed`,
+                            right: `.5rem`,
+                            bottom: `.5rem`
+                        }}
+                        size="small" 
+                        color="secondary" 
+                        aria-label="add metaphor case" 
+                        onClick={() => {
+                            handleContextMenuClose();
+                            setIsAddNewMetaphorDialogOpen(true);
+                        }}
+                    >
+                        <AddIcon />
+                    </Fab>
+                </Zoom>
+                :
+                null
+            }
+            <ToolBox>
+                <div
+                    style={{
+                        width: `100%`,
+                        height: `7rem`
+                    }}
+                >
+                    <h3
+                        style={{
+                            textAlign: `center`
+                        }}
+                    >
+                        {t(`toolBox.toneLabel`)}
+                    </h3>
+                    {
+                        !userState.isAuthenticated
+                        ?
+                        <div
+                            style={{
+                                display: `flex`,
+                                justifyContent: `center`
+                            }}
+                        >
+                            <ArticleToneMarker
+                                bgColor={articleToneColorSwitch(article.tone)}
+                            />
+                        </div>
+                        :
+                        <SelectToneWidget
+                            article={article}
+                            isLoading={isArticlesUpdatingLoading}
+                            handleUpdateArticleTone={handleUpdateArticleTone}
+                        />
+                    }
+                </div>
+                {
+                    !isCommentEdited
+                    ?
+                    (
+                        (!userState.isAuthenticated && article.comment) || userState.isAuthenticated
+                        ?
+                        <TextField
+                            style={{
+                                width: `100%`
+                            }}
+                            multiline
+                            rows={4}
+                            variant="outlined"
+                            label={t(`toolBox.commentLabel`)}
+                            value={article?.comment}
+                        />
+                        :
+                        null
+                    )
+                    :
+                    <TextField
+                        style={{
+                            width: `100%`
+                        }}
+                        multiline
+                        rows={4}
+                        variant="outlined"
+                        label={t(`toolBox.commentLabel`)}
+                        value={commentInEdit}
+                        onChange={(e) => {
+                            setCommentInEdit(e.target.value)
+                        }}
+                    />
+                }
+                {
+                    userState.isAuthenticated
+                    ?
+                    <div
+                        style={{
+                            width: `100%`,
+                            display: `flex`,
+                            justifyContent: `center`
+                        }}                        
+                    >
+                        {
+                            isCommentEdited
+                            ?
+                            <>
+                            <IconButton
+                                onClick={() => {
+                                    handleUpdateArticleComment(commentInEdit!!);
+                                }}
+                                color="primary"
+                                disabled={isArticlesUpdatingLoading}
+                            >
+                                <SaveIcon />
+                            </IconButton>
+                            <IconButton
+                                onClick={() => {
+                                    setCommentInEdit(article.comment)
+                                    setCommentEdited(false);
+                                }}
+                                color="secondary"
+                                disabled={isArticlesUpdatingLoading}
+                            >
+                                <CancelIcon />
+                            </IconButton>
+                            </>
+                            :
+                            <IconButton
+                                onClick={() => {
+                                    setCommentEdited(true);
+                                }}
+                                color="primary"
+                                disabled={isArticlesUpdatingLoading}
+                            >
+                                <EditIcon />
+                            </IconButton>
+                        }
+                    </div>
+                    :
+                    null
+                }
+            </ToolBox>
         </Dialog>
     )
 }

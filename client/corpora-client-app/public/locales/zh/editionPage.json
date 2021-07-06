@@ -1,3 +1,70 @@
 {
-    
+    "metatitle": "媒体期刊 | 媒体话语中人工智能隐喻",
+    "noArticlesMsg": "没有文章",
+    "rowsPerPage": "每页行数",
+    "tableRow": {
+        "tableHead": {
+            "annotationStatus": "诠释状态",
+            "annotationStatus__all": "全部",
+            "annotationStatus__annotated": "已诠释",
+            "annotationStatus__notAnnotated": "未诠释",
+            "heading": "标题",
+            "publication_date": "发布日期",
+            "tone": "语气",
+            "metaphors": "隐喻"
+        }
+    },
+    "toolBox": {
+        "toneLabel": "文章的语气",
+        "commentLabel": "注释"
+    },
+    "dialogs": {
+        "AddNewArticle": {
+            "title": "添加新文章",
+            "headingLabel": "标题",
+            "publicationDateLabel": "发布日期",
+            "urlLabel": "URL",
+            "saveBtn": "保存"
+        },
+        "DisplayArticle": {
+            "title": "诠释 & 校订",
+            "headingLabel": "Heading",
+            "publicationDateLabel": "发布日期",
+            "urlLabel": "URL",
+            "listOfMetaphors": "隐喻列表",
+            "addNewMetaphorCasePopUp": "添加新隐喻案例",
+            "duplicateWarning": "文本重复，请选择更精确的范围！",
+            "editBtn": "校订",
+            "saveBtn": "保存",
+            "cancelBtn": "取消"
+        }
+    },
+    "modals": {
+        "deleteArticleModal": {
+            "title": "删除文章",
+            "message": "确定要删除文章吗？",
+            "submitBtn": "确认",
+            "cancelBtn": "取消"
+        },
+        "addMetaphorModal": {
+            "title": "添加新隐喻案例",
+            "heading": "文章标题",
+            "body": "文章主文",
+            "textLabel": "隐喻",
+            "commentLabel": "注释",
+            "metaphorModelLabel": "隐喻模式",
+            "submitBtn": "添加",
+            "cancelBtn": "取消"
+        },
+        "displayMetaphorModal": {
+            "title": "隐喻案例",
+            "textLabel": "隐喻",
+            "confirmDeleteBtn": "删除",
+            "cancelDeleteBtn": "取消",
+            "commentLabel": "注释",
+            "metaphorModelLabel": "隐喻模式",
+            "submitBtn": "保存",
+            "cancelBtn": "取消"
+        }
+    }
 }

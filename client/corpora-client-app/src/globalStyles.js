@@ -35,6 +35,9 @@ const GlobalStyle = createGlobalStyle`
   /* Scrollbar */
   *::-webkit-scrollbar {
     width: 4px;
+    height: 4px;
+
+    cursor: pointer;
   }
   * {
     scrollbar-width: thin;

@@ -1,3 +1,70 @@
 {
-    
+    "metatitle": "Издания | Метафоризация ИИ в медиа-дискурсе",
+    "noArticlesMsg": "Статьи не найдены",
+    "rowsPerPage": "Строк на странице",
+    "tableRow": {
+        "tableHead": {
+            "annotationStatus": "Аннотированность",
+            "annotationStatus__all": "Все",
+            "annotationStatus__annotated": "Аннотированные",
+            "annotationStatus__notAnnotated": "Не аннотированные",
+            "heading": "Заголовок",
+            "publication_date": "Дата публикации",
+            "tone": "Тон",
+            "metaphors": "Метафоры"
+        }
+    },
+    "toolBox": {
+        "toneLabel": "Тон статьи",
+        "commentLabel": "Комментарии"
+    },
+    "dialogs": {
+        "AddNewArticle": {
+            "title": "Добавить новую статью",
+            "headingLabel": "Заголовок",
+            "publicationDateLabel": "Дата публикации",
+            "urlLabel": "URL",
+            "saveBtn": "Сохранить"
+        },
+        "DisplayArticle": {
+            "title": "Аннотирование и правки",
+            "headingLabel": "Заголовок",
+            "publicationDateLabel": "Дата публикации",
+            "urlLabel": "URL",
+            "listOfMetaphors": "Список метафор",
+            "addNewMetaphorCasePopUp": "Отметить метафору",
+            "duplicateWarning": "Текст повторяется, выберите больший участок текста!",
+            "editBtn": "Редактировать",
+            "saveBtn": "Сохранить",
+            "cancelBtn": "Отмена"
+        }
+    },
+    "modals": {
+        "deleteArticleModal": {
+            "title": "Удалить статью",
+            "message": "Уверены, что хотите удалить статью?",
+            "submitBtn": "Подтвердить",
+            "cancelBtn": "Отмена"
+        },
+        "addMetaphorModal": {
+            "title": "Добавить новую метафору",
+            "heading": "Заголовок статьи",
+            "body": "Основной текст",
+            "textLabel": "Метафора",
+            "commentLabel": "Комментарий",
+            "metaphorModelLabel": "Метафорическая модель",
+            "submitBtn": "Добавить",
+            "cancelBtn": "Отмена"
+        },
+        "displayMetaphorModal": {
+            "title": "Метафора",
+            "textLabel": "Метафора",
+            "confirmDeleteBtn": "Удалить",
+            "cancelDeleteBtn": "Отмена",
+            "commentLabel": "Комментарий",
+            "metaphorModelLabel": "Метафорическая модель",
+            "submitBtn": "Сохранить",
+            "cancelBtn": "Отмена"
+        }
+    }
 }

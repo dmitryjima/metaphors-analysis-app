@@ -1,23 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react'
-
-import "trix/dist/trix";
-import "trix/dist/trix.css";
-import { TrixEditor } from "react-trix";
-
+import React, { useState, useEffect } from 'react'
 
 import { useTranslation } from 'react-i18next';
 
-
 import { Article, Edition } from '../../api/dataModels';
 
-
-
-import { AppBar, Button, createStyles, Dialog, Divider, IconButton, LinearProgress, List, ListItem, ListItemText, makeStyles, Slide, TextField, Theme, Toolbar, Typography } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/CloseOutlined'
-import { TransitionProps } from '@material-ui/core/transitions/transition';
+// Stylings
 import styled from 'styled-components';
+import { AppBar, Button, createStyles, Dialog, IconButton, LinearProgress, makeStyles, Slide, TextField, Theme, Toolbar, Typography } from '@material-ui/core';
+import { TransitionProps } from '@material-ui/core/transitions/transition';
 import { KeyboardDatePicker } from '@material-ui/pickers';
+import CloseIcon from '@material-ui/icons/CloseOutlined'
 
+// Trix editor
+import "trix/dist/trix";
+import "trix/dist/trix.css";
+import { TrixEditor } from "react-trix";
 
 interface AddNewArticleDialogProps {
     edition: Edition,
@@ -53,7 +50,6 @@ const FormContainer = styled.div`
     justify-content: flex-start;
     align-items: center;
 
-
     margin-bottom: 3rem;
 `
 
@@ -87,7 +83,7 @@ const AddNewArticleDialog: React.FC<AddNewArticleDialogProps> = ({
     handleClose,
     handleAddNewArticle
 }) => {
-    const { t, i18n, ready } = useTranslation("editionPage");
+    const { t } = useTranslation("editionPage");
 
     const classes = useStyles();
 

@@ -90,22 +90,43 @@ export async function updateArticleToggleAnnotated(id: string): Promise<Article>
 /**
  * Update article's comment and/or tone
  * @async
- * @function updateArticleCommentTone
+ * @function updateArticleTone
 */
-export async function updateArticleCommentTone(
+export async function updateArticleTone(
     id: string,
-    comment?: string,
-    tone?: string
+    tone: string
 ): Promise<Article> {
 
     const payload = {
         id,
-        ...(comment && { comment }),
-        ...(tone && { tone })
+        tone
     }
 
     const { data } = await axios.put(
-        `${BASE_URL}/api/articles/update_article_comment_tone`,
+        `${BASE_URL}/api/articles/update_article_tone`,
+        payload
+    );
+
+    return data;
+}
+
+/**
+ * Update article's comment and/or tone
+ * @async
+ * @function updateArticleComment
+*/
+export async function updateArticleComment(
+    id: string,
+    comment: string
+): Promise<Article> {
+
+    const payload = {
+        id,
+        comment
+    }
+
+    const { data } = await axios.put(
+        `${BASE_URL}/api/articles/update_article_comment`,
         payload
     );
 

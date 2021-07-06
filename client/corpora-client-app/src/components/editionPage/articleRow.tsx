@@ -1,13 +1,14 @@
 import React from 'react';
 
 import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '../../app/hooks';
 
+// Stylings
+import styled from 'styled-components';
 import { Checkbox, TableCell, TableRow, Typography, IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { Article } from '../../api/dataModels';
-import styled from 'styled-components';
-import { useAppSelector } from '../../app/hooks';
 
 interface ArticleRowProps {
     article: Article,
@@ -32,7 +33,7 @@ const ArticleTone = styled.div<ArticleToneProps>`
     };
 `
 
-const articleToneColorSwitch = (tone: string) => {
+export const articleToneColorSwitch = (tone: string | undefined) => {
     let color
     switch (tone) {
         case 'positive':
@@ -41,8 +42,11 @@ const articleToneColorSwitch = (tone: string) => {
         case 'negative':
             color = '#E87461'
             break;
-        default:
+        case 'neutral':
             color = '#7371FC'
+            break;
+        default:
+            color = 'grey'
             break;
     }
 
@@ -78,7 +82,7 @@ const ArticleRow: React.FC<ArticleRowProps> = ({
     handleSetArticleStagedForDelete,
     handleToggleArticleFullyAnnotated
 }) => {
-    const { t, i18n, ready } = useTranslation("editionPage");
+    const { i18n } = useTranslation("editionPage");
 
     const { user: userState } = useAppSelector(state => state)
 
@@ -107,7 +111,7 @@ const ArticleRow: React.FC<ArticleRowProps> = ({
             </TableCell>
             <TableCell>
                 <Typography variant="body2">
-                    {article.heading.length <= 20 ? article.heading : article.heading.substring(0,20) + '...'}
+                    {article.heading.length <= 20 ? article.heading : article.heading.substring(0,15) + '...'}
                 </Typography>
             </TableCell>
             <TableCell>

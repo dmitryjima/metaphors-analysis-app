@@ -2,17 +2,18 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router';
 
 
-
+// Stylings
 import styled, { css } from 'styled-components'
 import { IconButton } from '@material-ui/core'
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
+// State
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-
-import { Edition } from '../../api/dataModels'
 import { handleUpdateEditionPicture } from '../../slices/editionsSlice';
+import { Edition } from '../../api/dataModels';
+
+
 
 interface EditionCardProps {
     edition: Edition,
@@ -34,8 +35,6 @@ const EditionCardStyled = styled.div<EditionCardStyledProps>`
     @media (min-width: 640px) {
         width: 300px;
     }
-
-
 
     background-color: #FFF;
     border-radius: 4px;

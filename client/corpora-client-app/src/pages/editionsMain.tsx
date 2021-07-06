@@ -1,19 +1,23 @@
 import React, { useState } from 'react'
 import Helmet from 'react-helmet'
-import { NavLink } from 'react-router-dom'
-
 
 import { useTranslation } from 'react-i18next'
 
 import { useAppSelector } from '../app/hooks'
-import styled from 'styled-components'
-import EditionCard from '../components/editionsMain/editionCard'
-import { IconButton } from '@material-ui/core'
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import DeleteEditionModalDialog from '../components/editionsMain/deleteEditionModal'
 import { Edition } from '../api/dataModels'
+
+// Stylings
+import styled from 'styled-components'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import { IconButton } from '@material-ui/core'
+
+// Components
+import EditionCard from '../components/editionsMain/editionCard'
 import AddEditionModalDialog from '../components/editionsMain/addNewEditionModal'
 import UpdateEditionModalDialog from '../components/editionsMain/editEditionModal'
+import DeleteEditionModalDialog from '../components/editionsMain/deleteEditionModal'
+
+
 
 interface EditionsMainPageProps {
     availableLanguages: string[]
@@ -26,7 +30,7 @@ const EditionsCardsContainer = styled.div`
 const EditionsMainPage: React.FC<EditionsMainPageProps> = ({
     availableLanguages
 }) => {
-    const { t, i18n, ready } = useTranslation("editionsMain");
+    const { t } = useTranslation("editionsMain");
 
     const { editions: editionsState, user: userState } = useAppSelector(state => state);
 

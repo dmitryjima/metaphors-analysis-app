@@ -1,11 +1,10 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-
 
 import { useTranslation } from 'react-i18next';
-
-
 import { Article } from '../../api/dataModels';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+
 
 
 interface DeleteArticleModalDialogProps {
@@ -25,7 +24,7 @@ const DeleteArticleModalDialog: React.FC<DeleteArticleModalDialogProps> = ({
     handleClearArticleToDelete,
     handleDeleteArticle
 }) => {
-    const { t, i18n, ready } = useTranslation('editionPage');
+    const { t } = useTranslation('editionPage');
 
     return (
         <Dialog 
@@ -35,14 +34,14 @@ const DeleteArticleModalDialog: React.FC<DeleteArticleModalDialogProps> = ({
             handleClearArticleToDelete()
           }}
         >
-            <DialogTitle>{t(`dialogs.deleteArticleModal.title`)}</DialogTitle>
+            <DialogTitle>{t(`modals.deleteArticleModal.title`)}</DialogTitle>
             <DialogContent>
                 <div
                     style={{
                         padding: '.3px'
                     }}
                 >
-                    {t(`dialogs.deleteArticleModal.message`)}
+                    {t(`modals.deleteArticleModal.message`)}
                 </div>
             </DialogContent>
             <DialogActions>
@@ -57,7 +56,7 @@ const DeleteArticleModalDialog: React.FC<DeleteArticleModalDialogProps> = ({
                     }}
                     disabled={removeArticleLoading}
                 >
-                    {t(`dialogs.deleteArticleModal.submitBtn`)}
+                    {t(`modals.deleteArticleModal.submitBtn`)}
                 </Button>
                 <Button 
                     color="primary" 
@@ -67,7 +66,7 @@ const DeleteArticleModalDialog: React.FC<DeleteArticleModalDialogProps> = ({
                     }}
                     disabled={removeArticleLoading}
                 >
-                    {t(`dialogs.deleteArticleModal.cancelBtn`)}
+                    {t(`modals.deleteArticleModal.cancelBtn`)}
                 </Button>
             </DialogActions>
         </Dialog>

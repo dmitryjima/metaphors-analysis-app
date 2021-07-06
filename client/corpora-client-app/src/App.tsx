@@ -21,7 +21,7 @@ import NotFoundPage from './pages/notFoundPage';
 
 // Layout components
 import Navbar from './components/layout/navbar';
-import Sidebar from './components/layout/sidebar';
+import SidebarMobile, { SidebarDesktop } from './components/layout/sidebar';
 import Footer from './components/layout/footer';
 import LoginModalDialog from './components/layout/loginModal';
 import LogoutModalDialog from './components/layout/logoutModal';
@@ -40,12 +40,8 @@ import theme from './theme';
 
 // Utils
 import useWindowSize from './utils/useWindowResize';
-import SidebarMobile, { SidebarDesktop } from './components/layout/sidebar';
-
-
 
 const ApplicationContainer = styled.div`
-
 
 `
 
@@ -68,7 +64,7 @@ function App() {
   const dispatch = useAppDispatch();
   const { editions: editionsState } = useAppSelector(state => state)
 
-  const { width, height } = useWindowSize()
+  const { width } = useWindowSize()
 
   const [availableLanguages, setAvailableLanguages] = useState<Array<string>>([]);
 

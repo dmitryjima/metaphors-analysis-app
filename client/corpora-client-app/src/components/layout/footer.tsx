@@ -24,6 +24,10 @@ const FooterStyled = styled.div`
         padding: 1rem;
     }
 
+    .footer__author {
+        padding-bottom: 2rem;
+    }
+
     @media(min-width: 1025px) {
         padding-left: 250px;
 
@@ -34,7 +38,7 @@ const FooterStyled = styled.div`
 `
 
 const Footer = () => {
-    const { t, i18n, ready } = useTranslation("footer");
+    const { t } = useTranslation("footer");
 
     return (
         <FooterStyled>
