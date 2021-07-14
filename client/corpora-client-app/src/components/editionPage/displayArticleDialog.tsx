@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '../../app/hooks';
 import { updateArticleBody, updateArticleComment, updateArticleTone } from '../../api/endpoints/articles';
-import { Article, MetaphorCase, MetaphorModel } from '../../api/dataModels';
+import { Article, Edition, MetaphorCase, MetaphorModel } from '../../api/dataModels';
 
 
 // Trix editor
@@ -41,6 +41,7 @@ import { articleToneColorSwitch } from './articleRow';
 
 interface DisplayArticleDialogProps {
     article: Article,
+    edition: Edition,
     isOpen: boolean,
     handleClose: () => void,
     isArticlesUpdatingLoading: boolean,
@@ -245,6 +246,7 @@ enum LocationEnum {
 
 const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
     article,
+    edition,
     isOpen,
     handleClose,
     isArticlesUpdatingLoading,
@@ -473,7 +475,10 @@ const DisplayArticleDialog: React.FC<DisplayArticleDialogProps> = ({
             char_range: [start, end],
             text: selectionText!!,
             metaphorModel: {} as MetaphorModel,
-            sourceArticleId: article._id
+            sourceArticleId: article._id,
+            sourceEditionId: edition._id,
+            sourceEditionName: edition.name,
+            lang: edition.lang
         }
 
         setPotentialMetaphorCase(potentialMetaphor);

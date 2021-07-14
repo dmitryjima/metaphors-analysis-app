@@ -22,6 +22,15 @@ const MetaphorCaseSchema = new Schema({
     },
     sourceArticleId: {
         type: String
+    },
+    sourceEditionId: {
+        type: String
+    },
+    sourceEditionName: {
+        type: String
+    },
+    lang: {
+        type: String
     }
 }, {
     collection: 'metaphor_cases'

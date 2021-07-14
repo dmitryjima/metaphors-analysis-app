@@ -35,7 +35,10 @@ const ArticleSchema = new Schema({
     metaphors: [{
         type: Schema.Types.ObjectId,
         ref: 'MetaphorCase'
-    }]
+    }],
+    lang: {
+        type: String
+    },
 }, {
     collection: 'articles'
 });

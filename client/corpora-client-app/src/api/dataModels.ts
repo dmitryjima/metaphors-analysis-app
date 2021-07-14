@@ -17,6 +17,7 @@ export interface Article {
     comment?: string,
     edition: Edition,
     metaphors?: MetaphorCase[],
+    lang?: string
 }
 
 export interface MetaphorCase {
@@ -26,7 +27,10 @@ export interface MetaphorCase {
     text: string,
     comment?: string,
     metaphorModel: MetaphorModel,
-    sourceArticleId?: string
+    sourceArticleId?: string,
+    sourceEditionId?: string,
+    sourceEditionName?: string,
+    lang?: string
 }
 
 

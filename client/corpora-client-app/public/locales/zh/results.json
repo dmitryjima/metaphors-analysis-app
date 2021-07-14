@@ -1,3 +1,47 @@
 {
-    
+    "metatitle": "分析结果 | 媒体话语中人工智能隐喻",
+    "heading": "分析结果",
+    "languages": {
+        "en": "英文",
+        "ru": "俄文",
+        "zh": "中文"
+    },
+    "articlesToneAnalysis": {
+        "title": "文章语气动态”",
+        "subtitle": "根据语言与媒体",
+        "selectYear": "选择时段",
+        "all": "2016-2020",
+        "total": "总计: ",
+        "positive": "积极: ",
+        "negative": "消极: ",
+        "neutral": "中极: "
+    },
+    "articlesChart": {
+        "title": "文章时间动态",
+        "subtitle": "带标记的隐喻",
+        "chart": {
+            "yAxisLabel": "文章数量",
+            "legend": {
+                "enNumArticles": "英文",
+                "ruNumArticles": "俄文",
+                "zhNumArticles": "中文",
+                "numMetaphors": "隐喻案例数"
+            }
+        }
+    },
+    "metaphorsChart": {
+        "title": "隐喻",
+        "subtitle": "根据隐喻模式",
+        "selectTop": "顶部",
+        "selectOption_all": "全部",
+        "chart": {
+            "yAxisLabel": "隐喻数量",
+            "legend": {
+                "enMetaphorsNum": "英文",
+                "ruMetaphorsNum": "俄文",
+                "zhMetaphorsNum": "中文",
+                "numMetaphors": "隐喻数"
+            }
+        }
+    }
 }

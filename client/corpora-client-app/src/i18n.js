@@ -9,7 +9,7 @@ i18n.use(Backend)
     .use(initReactI18next)
     .init({
         fallbackLng: 'en',
-        debug: true,
+        debug: false,
         detection: {
             order: ['path']
         },

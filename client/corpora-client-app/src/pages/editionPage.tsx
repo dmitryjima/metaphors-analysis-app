@@ -161,8 +161,6 @@ const EditionPage: React.FC<EditionPageProps> = ({
 
       workingArray[oldIndex] = {...article}
 
-      console.log(workingArray[oldIndex])
-
       setArticles(articles => [...workingArray]);
     } catch (err) {
       console.log(err);
@@ -213,8 +211,6 @@ const EditionPage: React.FC<EditionPageProps> = ({
         setIsArticlesLoading(true);
 
         const articlesResponse = await fetchArticlesByEditionId(edition._id!!);
-
-        console.log(articlesResponse);
 
         setArticles(articles => [...articlesResponse])
 
@@ -470,6 +466,7 @@ const EditionPage: React.FC<EditionPageProps> = ({
       />
       <DisplayArticleDialog
         article={currentlyDisplayedArticle}
+        edition={edition}
         isOpen={displayArticleDialogOpen}
         handleClose={() => {
           setDisplayArticleDialogOpen(false);

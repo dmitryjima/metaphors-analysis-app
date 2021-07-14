@@ -13,8 +13,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const compression = require('compression');
 const helmet = require('helmet');
-// NB! Part of the modules are not needed here, will clean 
-// it up in a bit.
+
 
 
 
@@ -25,16 +24,22 @@ const app = express();
     // Connect to database
 // const DatabaseURI = require('./config/keys').MongoURI;
 const DatabaseURI = process.env.MONGO_URI;
+const connectionOptions = process.env.NODE_ENV === 'production' ? {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    user: process.env.MONGO_USER,
+    pass: process.env.MONGO_PASS,
+    authSource: "admin"
+} : {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+}
+
 const connectToMongo = (uri) => {
-    mongoose.connect(uri, 
-            { 
-                useNewUrlParser: true, 
-                useUnifiedTopology: true,
-                // user: process.env.MONGO_USER,
-                // pass: process.env.MONGO_PASS,
-                // authSource: "admin"
-            }
-            )
+    mongoose.connect(
+            uri, 
+            connectionOptions    
+        )
         .then(() => console.log('Database connected...'))
         .catch(err => console.log(err))
 }

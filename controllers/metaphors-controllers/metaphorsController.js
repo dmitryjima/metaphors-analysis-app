@@ -49,7 +49,8 @@ exports.post_Create_New_Metaphor_Case = async(req, res, next) => {
         const article = await Article
             .findById(articleId)
             .populate([
-                { path: 'metaphors', model: 'MetaphorCase'}
+                { path: 'metaphors', model: 'MetaphorCase'},
+                { path: 'edition', model: 'Edition'},
             ])
             .exec();
 
@@ -64,7 +65,10 @@ exports.post_Create_New_Metaphor_Case = async(req, res, next) => {
             char_range: metaphorCaseBody.char_range,
             text: metaphorCaseBody.text,
             comment: metaphorCaseBody.comment,
-            sourceArticleId: article._id
+            sourceArticleId: article._id,
+            sourceEditionId: article.edition._id,
+            sourceEditionName: article.edition.name,
+            lang: article.lang
         });
 
         let model
@@ -124,11 +128,9 @@ exports.put_Update_Metaphor_Case = async(req, res, next) => {
             updatedDataModel
         } = req.body;
 
-        console.log(caseId)
 
         const metaphorCase = await MetaphorCase.findById(caseId);
 
-        console.log(metaphorCase)
 
         if(!metaphorCase) {
             let err = new Error('Case not found');
@@ -214,9 +216,6 @@ exports.delete_Delete_Metaphor_Case = async(req, res, next) => {
 
         article.metaphors = article.metaphors.filter(item => item._id !== caseId);
 
-        console.log(article)
-        console.log(caseId)
-
         await article.save()
         
         res.json({
@@ -234,6 +233,18 @@ exports.delete_Delete_Metaphor_Model = async(req, res, next) => {
         const { id } = req.body;
 
         let deletedModel = await MetaphorModel.findByIdAndDelete(id);
+
+        const referencedMetaphors = await MetaphorCase
+            .find({
+                metaphorModel: { $eq: deletedModel._id }
+            });
+
+
+        if (referencedMetaphors.length > 0) {
+            for (let i; i < referencedMetaphors.length; i++) {
+                await MetaphorModel.findByIdAndDelete(referencedMetaphors[i]._id);
+            }
+        }
 
         res.json(deletedModel);
     } catch (err) {

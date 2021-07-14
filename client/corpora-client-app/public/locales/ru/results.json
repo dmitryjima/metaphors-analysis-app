@@ -1,3 +1,47 @@
 {
-    
+    "metatitle": "Результаты анализа | Метафоризация ИИ в медиа-дискурсе",
+    "heading": "Результаты анализа",
+    "languages": {
+        "en": "Английский",
+        "ru": "Русский",
+        "zh": "Китайский"
+    },
+    "articlesToneAnalysis": {
+        "title": "Динамика тона материалов",
+        "subtitle": "По языку и изданию",
+        "selectYear": "Период",
+        "all": "2016-2020",
+        "total": "Всего: ",
+        "positive": "Позитивные: ",
+        "negative": "Негативные: ",
+        "neutral": "Нейтральные: "
+    },
+    "articlesChart": {
+        "title": "Динамика материалов во времени",
+        "subtitle": "С отмеченными метафорами",
+        "chart": {
+            "yAxisLabel": "Количество материалов",
+            "legend": {
+                "enNumArticles": "Английский",
+                "ruNumArticles": "Русский",
+                "zhNumArticles": "Китайский",
+                "numMetaphors": "Метафоры"
+            }
+        }
+    },
+    "metaphorsChart": {
+        "title": "Метафоры",
+        "subtitle": "По модели",
+        "selectTop": "Топ",
+        "selectOption_all": "Все",
+        "chart": {
+            "yAxisLabel": "Количество метафор",
+            "legend": {
+                "enMetaphorsNum": "Английский",
+                "ruMetaphorsNum": "Русский",
+                "zhMetaphorsNum": "Китайский",
+                "numMetaphors": "Метафоры"
+            }
+        }
+    }
 }

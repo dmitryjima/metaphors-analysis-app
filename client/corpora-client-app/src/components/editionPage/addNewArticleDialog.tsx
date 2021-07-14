@@ -92,7 +92,8 @@ const AddNewArticleDialog: React.FC<AddNewArticleDialogProps> = ({
         heading: '',
         body: '',
         fullyAnnotated: false,
-        edition: edition
+        edition: edition,
+        lang: edition.lang
     }
     const [articleInEdit, setArticleInEdit] = useState(defaultArticle);
 
@@ -236,7 +237,6 @@ const AddNewArticleDialog: React.FC<AddNewArticleDialogProps> = ({
                             label={t(`dialogs.AddNewArticle.publicationDateLabel`)}
                             value={articleInEdit.publication_date}
                             onChange={(date: Date | null, val) => {
-                                console.log(val)
                                 handleDateInput(date);
                             }}
                             allowKeyboardControl

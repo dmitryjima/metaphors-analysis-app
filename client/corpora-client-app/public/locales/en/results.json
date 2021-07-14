@@ -1,3 +1,47 @@
 {
-    "metatitle": "Results | AI metaphorization in Media Discourse"
+    "metatitle": "Results | AI metaphorization in Media Discourse",
+    "heading": "Results",
+    "languages": {
+        "en": "English",
+        "ru": "Russian",
+        "zh": "Chinese"
+    },
+    "articlesToneAnalysis": {
+        "title": "Articles tone dynamics",
+        "subtitle": "By language and edition",
+        "selectYear": "Select period",
+        "all": "2016-2020",
+        "total": "Total: ",
+        "positive": "Positive: ",
+        "negative": "Negative: ",
+        "neutral": "Neutral: "
+    },
+    "articlesChart": {
+        "title": "Articles dynamics in time",
+        "subtitle": "With marked metaphors",
+        "chart": {
+            "yAxisLabel": "Number of articles",
+            "legend": {
+                "enNumArticles": "English",
+                "ruNumArticles": "Russian",
+                "zhNumArticles": "Chinese",
+                "numMetaphors": "Metaphors"
+            }
+        }
+    },
+    "metaphorsChart": {
+        "title": "Metaphors",
+        "subtitle": "By model",
+        "selectTop": "Top",
+        "selectOption_all": "All",
+        "chart": {
+            "yAxisLabel": "Number of metaphors",
+            "legend": {
+                "enMetaphorsNum": "English",
+                "ruMetaphorsNum": "Russian",
+                "zhMetaphorsNum": "Chinese",
+                "numMetaphors": "Metaphors"
+            }
+        }
+    }
 }

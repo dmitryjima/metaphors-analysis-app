@@ -27,7 +27,7 @@ exports.login_controller = async(req, res, next) => {
             signed: true,
             httpOnly: true,
             maxAge: 10 * 60 * 60 * 1000,
-            // development only
+            // Change to HTTPS only in production
             secure: process.env.NODE_ENV === 'production' ? true : false
         })
         .json({status: 'OK'})

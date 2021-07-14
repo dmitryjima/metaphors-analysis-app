@@ -1,3 +1,11 @@
 {
-    
+    "metatitle": "AI metaphorization in Media Discourse",
+    "headerTitle": "Comparative study of the metaphors of AI technology in the Russian, Chinese, and American political media discourse",
+    "h2_welcome": "Welcome!",
+    "para_1": "This web application was developed by Dmitry Zhukov in the framework of the Ph.D. linguistics research project. It is aimed at convenient and systemized gathering, annotating, and auto-analyzing of the corresponding corpora.",
+    "para_2": "All textual, image, and media content used in this project was gathered via publicly available tools and sources, all the articles have URL links pointing to the original material. All the rights to the original materials belong to the corresponding media outlets.",
+    "para_3": "The application is based on the MERN stack, features a custom system for marking and annotating materials in multiple languages, including the ones considered hard to tokenize (e.g. Mandarin Chinese, Japanese). The root entity of the corpora is an 'Edition'. 'Editions' are grouped by their language, and contain 'Articles'. Each 'Article' has a number of properties, including publication date, tone, and a list of metaphors (if any) found in its body and headline. The 'Articles' are gathered and annotated manually and stored in the application's backend. The results for 'fully annotated' 'Articles' are presented on the Results page.",
+    "para_4": "I believe that a similar approach and application architecture have the potential to be used in the resembling research projects in the fields of linguistics or communications studies. The majority of the currently available software even though excels over utilizing standard office applications, most of it is desktop-oriented and based on relatively obsolete tech stacks, hurdling both the research results representation, and the research process itself, and usually having no room for collaboration. I will publish the source code of the application after some polishing, and making the components and deployment process slightly more generic.",
+    "para_5": "You can learn more about the project's aims and methodology on the About Project page.",
+    "ctaBtn": "Explore editions"
 }

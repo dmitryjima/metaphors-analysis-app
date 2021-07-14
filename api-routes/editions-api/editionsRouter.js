@@ -11,15 +11,15 @@ const editions_Controller = require('../../controllers/editions-controllers/edit
 router.get('/', editions_Controller.get_Fetch_All_Editions);
 
 // @Create
-router.post('/create_new', editions_Controller.post_Create_New_Edition);
+router.post('/create_new', authMiddleware, editions_Controller.post_Create_New_Edition);
 
 // @Update
-router.put('/update', editions_Controller.put_Update_Edition);
+router.put('/update', authMiddleware, editions_Controller.put_Update_Edition);
 
-router.post('/update_picture', editions_Controller.post_Update_Edition_Picture);
+router.post('/update_picture', authMiddleware, editions_Controller.post_Update_Edition_Picture);
 
 // @Delete
-router.delete('/delete', editions_Controller.delete_Delete_Edition);
+router.delete('/delete', authMiddleware, editions_Controller.delete_Delete_Edition);
 
 
 module.exports = router;

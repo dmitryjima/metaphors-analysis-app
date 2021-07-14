@@ -207,7 +207,7 @@ exports.delete_Delete_Article = async (req, res, next) => {
 
         if(deletedArticle.metaphors && deletedArticle.metaphors.length > 0) {
             for(let i = 0; i++; i < deletedArticle.metaphors) {
-                await MetaphorCase.findByIdAndDelete(deletedArticle.metaphors[i]._id)
+                await MetaphorCase.findByIdAndDelete(deletedArticle.metaphors[i])
             }
         }
     
