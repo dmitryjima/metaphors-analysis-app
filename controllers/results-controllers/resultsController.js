@@ -24,11 +24,25 @@ exports.get_Fetch_All_Data = async(req, res, next) => {
                 }
             },
 
-            {
+/*             {
                 $unset: [
                     "editions_mapping.pictureURL",
                     "editions_mapping.description"
                 ]
+            }, */
+
+            {
+                $project: {
+                    heading: 1,
+                    publication_date: 1,
+                    tone: 1,
+                    metaphors: 1,
+                    lang: 1,
+                    _id: 1,
+                    "editions_mapping.lang": 1,
+                    "editions_mapping.name": 1,
+                    "editions_mapping._id": 1,
+                }
             },
 
             {
@@ -68,13 +82,27 @@ exports.get_Fetch_All_Data = async(req, res, next) => {
                 }
             },
 
-            {
+/*             {
                 $unset: [
                     "metaphors.char_range",
                     "metaphors.metaphorModel"
                 ]
-            },
+            }, */
 
+
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    "metaphors._id": 1,
+                    "metaphors.location": 1,
+                    "metaphors.text": 1,
+                    "metaphors.sourceArticleId": 1,
+                    "metaphors.sourceEditionId": 1,
+                    "metaphors.sourceEditionName": 1,
+                    "metaphors.lang": 1,
+                }
+            },
 
 
             {

@@ -63,6 +63,9 @@ const authMiddleware = require('./middleware/auth');
 
 
     // Use app-level middleware
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.json());
 app.use(compression())
 app.use(express.urlencoded({extended: true}));
@@ -70,7 +73,6 @@ app.use(cors());
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(helmet());
 
-app.use(express.static(path.join(__dirname, 'public')));
 
 // logging in development
 app.use(logger(':method :url :status :res[content-length] - :response-time ms'));
@@ -90,7 +92,7 @@ app.use('/api/auth', authRouter);
 if (process.env.NODE_ENV === 'production') {
     // Set static folder for the client app
     app.use(express.static(path.join(__dirname, 'client', 'corpora-client-app', 'build')));
-
+    
     // Handle Customer-App SPA
     app.get('/*', (req, res) => {
         res.sendFile(path.join(__dirname, 'client', 'build', 'corpora-client-app', 'index.html'));
