@@ -341,7 +341,7 @@ const ResultsPage = () => {
                 let periodCompare = new Date(newPeriod).setHours(0,0,0,0);
     
                 // En
-                let enArticles = workingArticles.find((langGroup: any) => langGroup._id === 'en').articles;
+                let enArticles = workingArticles.find((langGroup: any) => langGroup._id === 'en')?.articles ?? [];
 
                 let enArticlesFiltered = enArticles.filter((a: any) => {
                     let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
@@ -358,7 +358,7 @@ const ResultsPage = () => {
                 }, 0);
 
                 // Ru
-                let ruArticles = workingArticles.find((langGroup: any) => langGroup._id === 'ru').articles;
+                let ruArticles = workingArticles.find((langGroup: any) => langGroup._id === 'ru')?.articles ?? [];
 
                 let ruArticlesFiltered = ruArticles.filter((a: any) => {
                     let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
@@ -375,7 +375,7 @@ const ResultsPage = () => {
                 }, 0);
 
                 // Zh
-                let zhArticles = workingArticles.find((langGroup: any) => langGroup._id === 'zh').articles;
+                let zhArticles = workingArticles.find((langGroup: any) => langGroup._id === 'zh')?.articles ?? [];
 
                 let zhArticlesFiltered = zhArticles.filter((a: any) => {
                     let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
