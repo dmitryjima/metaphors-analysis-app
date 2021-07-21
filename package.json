@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/www",
     "devServer": "nodemon ./bin/www",
+    "devClient": "npm start --prefix client/corpora-client-app",
     "dev": "concurrently \"npm run devServer\" \"npm start --prefix client/corpora-client-app\""
   },
   "keywords": [],
