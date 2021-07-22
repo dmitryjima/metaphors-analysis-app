@@ -19,6 +19,9 @@
     "articlesChart": {
         "title": "Динамика материалов во времени",
         "subtitle": "С отмеченными метафорами",
+        "selectPeriod": "Период",
+        "byMonth": "Месяц",
+        "byYear": "Год",
         "chart": {
             "yAxisLabel": "Количество материалов",
             "legend": {

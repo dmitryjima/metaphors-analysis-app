@@ -43,12 +43,15 @@ const PageBody = styled.div`
 `
 
 const AboutPage = () => {
-    const { t } = useTranslation("about");
+    const { t, i18n } = useTranslation("about");
 
     return (
         <>
             <Helmet
                 title={t(`metatitle`)}
+                htmlAttributes={{
+                    lang: i18n.language ? i18n.language : 'en'
+                }}
             /> 
             <PageBody>
                 <h1>

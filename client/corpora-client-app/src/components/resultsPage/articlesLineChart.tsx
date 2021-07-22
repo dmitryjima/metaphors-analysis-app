@@ -6,6 +6,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 export interface ArticleLineChartDataItem {
   period: string,
+  displayPeriod?: string,
   enNumArticles?: number,
   enNumMetaphors?: number,
   zhNumArticles?: number,
@@ -74,7 +75,7 @@ const CustomTooltip = (props: any) => {
 
     return (
       <CustomTooltipStyled>
-        <p className="label">{label}</p>
+        <p className="label">{payloadToDisplay.displayPeriod ? payloadToDisplay.displayPeriod : label}</p>
         <div
           className="customTooltipStyled__item"
           style={{
@@ -186,7 +187,8 @@ const ArticlesLineChart: React.FC<ArticlesLineChartProps> = ({
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis 
-          dataKey={({ period }) => {
+          dataKey={({ period, displayPeriod }) => {
+            if (displayPeriod) return displayPeriod
             return new Date(period).toLocaleDateString(i18n.language, { year: 'numeric', month: 'short'})
           }}
           tick={<CustomizedAxisTick />}

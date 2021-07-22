@@ -25,6 +25,9 @@ const NotFoundPage = () => {
         <>
         <Helmet
             title={`404`}
+            htmlAttributes={{
+                lang: i18n.language ? i18n.language : 'en'
+            }}
         /> 
         <div>
             page not found

@@ -89,7 +89,8 @@ const ArticlesChartContainer = styled.div`
     justify-content: space-around;
 
     h2,
-    h3 {
+    h3,
+    .articlesChartContainer__selectPeriod {
         width: 100%;
         text-align: center;
     }
@@ -98,6 +99,9 @@ const ArticlesChartContainer = styled.div`
     }
     & > h3 {
         margin-top: 0;
+    }
+    .articlesChartContainer__selectPeriod {
+        margin-bottom: .5rem;
     }
 `
 
@@ -267,6 +271,7 @@ const ResultsPage = () => {
     const [tonesArticlesData, setTonesArticlesData] = useState<any[]>([]);
 
     // Articles line chart
+    const [lineChartPeriod, setLineChartPeriod] = useState('byYear');
     const [articlesLineChartData, setArticlesLineChartData] = useState<ArticleLineChartDataItem[]>([])
 
     // Articles line chart
@@ -334,80 +339,157 @@ const ResultsPage = () => {
     
             const workingData: ArticleLineChartDataItem[] = [];
     
-            for (let i = 0; i < 60; i++) {
-                let prevPeriod = i === 0 ? new Date() : new Date(workingData[i - 1].period)
-                let newPeriod = i === 0 ? new Date('2016-01-01') : new Date(prevPeriod?.setMonth(prevPeriod.getMonth() + 1));
+            if (lineChartPeriod === 'byMonth') {
+                
+                for (let i = 0; i < 60; i++) {
+                    let prevPeriod = i === 0 ? new Date() : new Date(workingData[i - 1].period)
+                    let newPeriod = i === 0 ? new Date('2016-01-01') : new Date(prevPeriod?.setMonth(prevPeriod.getMonth() + 1));
+        
+                    let periodCompare = new Date(newPeriod).setHours(0,0,0,0);
+        
+                    // En
+                    let enArticles = workingArticles.find((langGroup: any) => langGroup._id === 'en')?.articles ?? [];
     
-                let periodCompare = new Date(newPeriod).setHours(0,0,0,0);
+                    let enArticlesFiltered = enArticles.filter((a: any) => {
+                        let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
     
-                // En
-                let enArticles = workingArticles.find((langGroup: any) => langGroup._id === 'en')?.articles ?? [];
-
-                let enArticlesFiltered = enArticles.filter((a: any) => {
-                    let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
-
-                    if (artDate === periodCompare) {
-                        return true
-                    } else {
-                        return false
+                        if (artDate === periodCompare) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+    
+                    let enNumMetaphors = enArticlesFiltered.reduce((acc: number, article: any) => {
+                        return acc + article.metaphors ? article.metaphors.length : 0
+                    }, 0);
+    
+                    // Ru
+                    let ruArticles = workingArticles.find((langGroup: any) => langGroup._id === 'ru')?.articles ?? [];
+    
+                    let ruArticlesFiltered = ruArticles.filter((a: any) => {
+                        let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
+    
+                        if (artDate === periodCompare) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+    
+                    let ruNumMetaphors = ruArticlesFiltered.reduce((acc: number, article: any) => {
+                        return acc + article.metaphors ? article.metaphors.length : 0
+                    }, 0);
+    
+                    // Zh
+                    let zhArticles = workingArticles.find((langGroup: any) => langGroup._id === 'zh')?.articles ?? [];
+    
+                    let zhArticlesFiltered = zhArticles.filter((a: any) => {
+                        let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
+    
+                        if (artDate === periodCompare) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+    
+                    let zhNumMetaphors = zhArticlesFiltered.reduce((acc: number, article: any) => {
+                        return acc + article.metaphors ? article.metaphors.length : 0
+                    }, 0);
+    
+    
+                    let scaffoldObj:ArticleLineChartDataItem = {
+                        period: newPeriod.toDateString(),
+                        enNumArticles: enArticlesFiltered.length,
+                        enNumMetaphors: enNumMetaphors,
+                        zhNumArticles: zhArticlesFiltered.length,
+                        zhNumMetaphors: zhNumMetaphors,
+                        ruNumArticles: ruArticlesFiltered.length,
+                        ruNumMetaphors: ruNumMetaphors,
                     }
-                })
-
-                let enNumMetaphors = enArticlesFiltered.reduce((acc: number, article: any) => {
-                    return acc + article.metaphors ? article.metaphors.length : 0
-                }, 0);
-
-                // Ru
-                let ruArticles = workingArticles.find((langGroup: any) => langGroup._id === 'ru')?.articles ?? [];
-
-                let ruArticlesFiltered = ruArticles.filter((a: any) => {
-                    let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
-
-                    if (artDate === periodCompare) {
-                        return true
-                    } else {
-                        return false
-                    }
-                })
-
-                let ruNumMetaphors = ruArticlesFiltered.reduce((acc: number, article: any) => {
-                    return acc + article.metaphors ? article.metaphors.length : 0
-                }, 0);
-
-                // Zh
-                let zhArticles = workingArticles.find((langGroup: any) => langGroup._id === 'zh')?.articles ?? [];
-
-                let zhArticlesFiltered = zhArticles.filter((a: any) => {
-                    let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
-
-                    if (artDate === periodCompare) {
-                        return true
-                    } else {
-                        return false
-                    }
-                })
-
-                let zhNumMetaphors = zhArticlesFiltered.reduce((acc: number, article: any) => {
-                    return acc + article.metaphors ? article.metaphors.length : 0
-                }, 0);
-
-
-                let scaffoldObj:ArticleLineChartDataItem = {
-                    period: newPeriod.toDateString(),
-                    enNumArticles: enArticlesFiltered.length,
-                    enNumMetaphors: enNumMetaphors,
-                    zhNumArticles: zhArticlesFiltered.length,
-                    zhNumMetaphors: zhNumMetaphors,
-                    ruNumArticles: ruArticlesFiltered.length,
-                    ruNumMetaphors: ruNumMetaphors,
+                    workingData.push(scaffoldObj);
                 }
-                workingData.push(scaffoldObj);
+
+            } else {
+                for (let i = 0; i < 5; i++) {
+                    let prevPeriod = i === 0 ? new Date('2016-01-01') : new Date(workingData[i - 1].period)
+                    let newPeriod = i === 0 ? new Date('2017-01-01') : new Date(new Date(prevPeriod!!).setFullYear(prevPeriod.getFullYear() + 1));
+        
+                    let periodCompare = new Date(newPeriod).setHours(0,0,0,0);
+                    let periodComparePrev = new Date(prevPeriod).setHours(0,0,0,0);
+        
+                    // En
+                    let enArticles = workingArticles.find((langGroup: any) => langGroup._id === 'en')?.articles ?? [];
+    
+                    let enArticlesFiltered = enArticles.filter((a: any) => {
+                        let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
+    
+                        if (artDate >= periodComparePrev && artDate < periodCompare) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+    
+                    let enNumMetaphors = enArticlesFiltered.reduce((acc: number, article: any) => {
+                        return acc + (article.metaphors ? article.metaphors.length : 0)
+                    }, 0);
+    
+                    // Ru
+                    let ruArticles = workingArticles.find((langGroup: any) => langGroup._id === 'ru')?.articles ?? [];
+    
+                    let ruArticlesFiltered = ruArticles.filter((a: any) => {
+                        let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
+    
+                        if (artDate >= periodComparePrev && artDate < periodCompare) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+    
+                    let ruNumMetaphors = ruArticlesFiltered.reduce((acc: number, article: any) => {
+                        return acc + (article.metaphors ? article.metaphors.length : 0)
+                    }, 0);
+    
+                    // Zh
+                    let zhArticles = workingArticles.find((langGroup: any) => langGroup._id === 'zh')?.articles ?? [];
+    
+                    let zhArticlesFiltered = zhArticles.filter((a: any) => {
+                        let artDate = new Date(new Date(a.publication_date).setDate(1)).setHours(0,0,0,0);
+    
+                        if (artDate >= periodComparePrev && artDate < periodCompare) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+    
+                    let zhNumMetaphors = zhArticlesFiltered.reduce((acc: number, article: any) => {
+                        return acc + (article.metaphors ? article.metaphors.length : 0)
+                    }, 0);
+    
+    
+                    let scaffoldObj:ArticleLineChartDataItem = {
+                        period: newPeriod.toDateString(),
+                        displayPeriod: prevPeriod.getFullYear().toString(),
+                        enNumArticles: enArticlesFiltered.length,
+                        enNumMetaphors: enNumMetaphors,
+                        zhNumArticles: zhArticlesFiltered.length,
+                        zhNumMetaphors: zhNumMetaphors,
+                        ruNumArticles: ruArticlesFiltered.length,
+                        ruNumMetaphors: ruNumMetaphors,
+                    }
+                    workingData.push(scaffoldObj);
+                }
             }
+
     
             setArticlesLineChartData(articlesLineChartData => [...workingData]);
 
         }
-    }, [articlesData]);
+    }, [articlesData, lineChartPeriod]);
 
 
     // Set metaphors bar chart data
@@ -446,6 +528,9 @@ const ResultsPage = () => {
         <>
             <Helmet
                 title={t(`metatitle`)}
+                htmlAttributes={{
+                    lang: i18n.language ? i18n.language : 'en'
+                }}
             />
             {
                 isResultsLoading
@@ -545,6 +630,22 @@ const ResultsPage = () => {
                         <h3>
                             {t(`articlesChart.subtitle`)}
                         </h3>
+                        <div
+                            className="articlesChartContainer__selectPeriod"
+                        >
+                            <InputLabel id="selectTopMetaphors">{t(`articlesChart.selectPeriod`)}</InputLabel>
+                            <Select
+                                labelId="selectTopMetaphors"
+                                id="selectTopMetaphors-select"
+                                value={lineChartPeriod}
+                                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                                    setLineChartPeriod(event.target.value as string);
+                                }}
+                            >
+                                <MenuItem value={'byMonth'}>{t(`articlesChart.byMonth`)}</MenuItem>
+                                <MenuItem value={'byYear'}>{t(`articlesChart.byYear`)}</MenuItem>
+                            </Select>
+                        </div>
                     {
                         articlesData.length > 0
                         ?

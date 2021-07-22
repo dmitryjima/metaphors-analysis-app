@@ -178,12 +178,15 @@ const PageBody = styled.div`
 `
 
 const LandingPage = () => {
-    const { t } = useTranslation("landing");
+    const { t, i18n } = useTranslation("landing");
 
     return (
         <>
             <Helmet
                 title={t(`metatitle`)}
+                htmlAttributes={{
+                    lang: i18n.language ? i18n.language : 'en'
+                }}
             /> 
             <PageBody>
                 <Header/>

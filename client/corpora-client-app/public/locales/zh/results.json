@@ -7,7 +7,7 @@
         "zh": "中文"
     },
     "articlesToneAnalysis": {
-        "title": "文章语气动态”",
+        "title": "文章语气动态",
         "subtitle": "根据语言与媒体",
         "selectYear": "选择时段",
         "all": "2016-2020",
@@ -19,6 +19,9 @@
     "articlesChart": {
         "title": "文章时间动态",
         "subtitle": "带标记的隐喻",
+        "selectPeriod": "时期",
+        "byMonth": "年度",
+        "byYear": "月份",
         "chart": {
             "yAxisLabel": "文章数量",
             "legend": {

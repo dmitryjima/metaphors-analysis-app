@@ -279,6 +279,9 @@ const EditionPage: React.FC<EditionPageProps> = ({
     <>
       <Helmet
         title={`${edition.name} | ${t(`metatitle`)}`}
+        htmlAttributes={{
+            lang: i18n.language ? i18n.language : 'en'
+        }}
       />
       {
         isArticlesUpdating

@@ -100,7 +100,9 @@ const AddNewMetaphorModalDialog: React.FC<AddNewMetaphorModalDialogProps> = ({
 
     useEffect(() => {
         if(potentialMetaphorCase) {
-            setMetaphorInEdit(potentialMetaphorCase)
+            setMetaphorInEdit(potentialMetaphorCase);
+            setDataModelValue({} as MetaphorModel);
+            setDataModelInputValue('');
         }
     }, [potentialMetaphorCase]);
 

@@ -19,6 +19,9 @@
     "articlesChart": {
         "title": "Articles dynamics in time",
         "subtitle": "With marked metaphors",
+        "selectPeriod": "Period",
+        "byMonth": "By month",
+        "byYear": "By year",
         "chart": {
             "yAxisLabel": "Number of articles",
             "legend": {

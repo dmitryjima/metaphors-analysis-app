@@ -30,7 +30,7 @@ const EditionsCardsContainer = styled.div`
 const EditionsMainPage: React.FC<EditionsMainPageProps> = ({
     availableLanguages
 }) => {
-    const { t } = useTranslation("editionsMain");
+    const { t, i18n } = useTranslation("editionsMain");
 
     const { editions: editionsState, user: userState } = useAppSelector(state => state);
 
@@ -77,6 +77,9 @@ const EditionsMainPage: React.FC<EditionsMainPageProps> = ({
         <>
         <Helmet
             title={t(`metatitle`)}
+            htmlAttributes={{
+                lang: i18n.language ? i18n.language : 'en'
+            }}
         /> 
         <h1
             style={{
