@@ -446,7 +446,7 @@ const EditionPage: React.FC<EditionPageProps> = ({
             labelRowsPerPage={width < 1024 ? '' : t(`rowsPerPage`)}
             rowsPerPageOptions={[5, 10, 20, 30, 50, 100, 150]}
             component="div"
-            count={articles.length}
+            count={articlesSorted.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={(e, newPage) => {
