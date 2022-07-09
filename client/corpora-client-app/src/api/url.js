@@ -1,3 +1,1 @@
-export const BASE_URL = ''
-
-//export const BASE_URL = 'https://ai-metaphors-analysis.zdcreatech.com'
+export const BASE_URL = process.env.BASE_URL ?? ''
