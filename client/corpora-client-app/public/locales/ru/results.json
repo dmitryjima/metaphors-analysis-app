@@ -37,6 +37,9 @@
         "subtitle": "По модели",
         "selectTop": "Топ",
         "selectOption_all": "Все",
+        "selectToMetaphorsDisplayType": "Отображение",
+        "selectMetaphorsDisplayType_all": "Все",
+        "selectMetaphorsDisplayType_byCountry": "По языку",
         "chart": {
             "yAxisLabel": "Количество метафор",
             "legend": {

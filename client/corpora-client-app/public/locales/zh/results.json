@@ -37,6 +37,9 @@
         "subtitle": "根据隐喻模式",
         "selectTop": "顶部",
         "selectOption_all": "全部",
+        "selectToMetaphorsDisplayType": "显示模型",
+        "selectMetaphorsDisplayType_all": "全部",
+        "selectMetaphorsDisplayType_byCountry": "根据语言",
         "chart": {
             "yAxisLabel": "隐喻数量",
             "legend": {

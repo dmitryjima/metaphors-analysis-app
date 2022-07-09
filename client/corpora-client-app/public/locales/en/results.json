@@ -37,6 +37,9 @@
         "subtitle": "By model",
         "selectTop": "Top",
         "selectOption_all": "All",
+        "selectToMetaphorsDisplayType": "Display type",
+        "selectMetaphorsDisplayType_all": "All",
+        "selectMetaphorsDisplayType_byCountry": "By language",
         "chart": {
             "yAxisLabel": "Number of metaphors",
             "legend": {

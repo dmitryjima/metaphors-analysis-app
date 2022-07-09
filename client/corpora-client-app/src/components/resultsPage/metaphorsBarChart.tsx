@@ -161,6 +161,7 @@ const MetaphorsBarChart: React.FC<MetaphorsBarChartProps> = ({
                 />
                 <YAxis
                     padding={{ top: 20 }}
+                    offset={10}
                     allowDecimals={false}
                     label={{ value: t(`metaphorsChart.chart.yAxisLabel`), angle: -90 }}
                 />

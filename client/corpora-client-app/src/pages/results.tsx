@@ -19,6 +19,7 @@ import { LinearProgress, Select, MenuItem, InputLabel } from '@material-ui/core'
 import TonesPieChart, { DataInner, DataOuter } from '../components/resultsPage/tonesPieChart';
 import ArticlesLineChart, { ArticleLineChartDataItem } from '../components/resultsPage/articlesLineChart';
 import MetaphorsBarChart, { BarChartMetaphorCase, MetaphorsBarChartDataItem } from '../components/resultsPage/metaphorsBarChart';
+import MetaphorsBarChartByCountry, { MetaphorsBarChartDataItemByCountry } from '../components/resultsPage/metaphorsBarChartByCountry';
 
 
 const ResultsContainer = styled.div`
@@ -112,8 +113,7 @@ const MetaphorsChartContainer = styled.div`
     justify-content: space-around;
 
     h2,
-    h3,
-    .metaphorsChartContainer__selectTop {
+    h3 {
         width: 100%;
         text-align: center;
     }
@@ -122,6 +122,14 @@ const MetaphorsChartContainer = styled.div`
     }
     h3 {
         margin-top: 0;
+    }
+
+    .metaphorsChartContainer__selectTop {
+        margin-right: 1rem;
+    }
+    .metaphorsChartContainer__selectMetaphordsDisplayType {
+        text-align: center;
+        margin-left: 1rem;
     }
 `
 
@@ -272,11 +280,14 @@ const ResultsPage = () => {
 
     // Articles line chart
     const [lineChartPeriod, setLineChartPeriod] = useState('byYear');
-    const [articlesLineChartData, setArticlesLineChartData] = useState<ArticleLineChartDataItem[]>([])
+    const [articlesLineChartData, setArticlesLineChartData] = useState<ArticleLineChartDataItem[]>([]);
 
     // Articles line chart
+    const [metaphorsDisplayType, setMetaphorsDisplayType] = useState('all');
     const [metaphorsBarChartTop, setMetaphorsBarChartTop] = useState(5);
-    const [metaphorsBarChartData, setMetaphorsBarChartData] = useState<MetaphorsBarChartDataItem[]>([])
+
+    const [metaphorsBarChartData, setMetaphorsBarChartData] = useState<MetaphorsBarChartDataItem[]>([]);
+    const [metaphorsBarChartDataByCountry, setMetaphorsBarChartDataByCountry] = useState<MetaphorsBarChartDataItemByCountry[][]>([]);
 
 
     // Fetch results
@@ -524,6 +535,94 @@ const ResultsPage = () => {
         }
     }, [metaphorsData, metaphorsBarChartTop])
 
+    useEffect(() => {
+        let workingMetaphorModels: any = JSON.stringify(metaphorsData);
+        workingMetaphorModels = JSON.parse(workingMetaphorModels) as [];
+        
+        let workingDataByCountry: MetaphorsBarChartDataItemByCountry[][] = [[], [], []];
+
+        if (metaphorsData.length > 0) {
+            let models_en: any[] = [];
+            let models_ru: any[] = [];
+            let models_zh: any[] = [];
+
+            for (let i in workingMetaphorModels) {
+                let en = workingMetaphorModels[i].metaphors.filter((m: BarChartMetaphorCase) => m.lang === 'en');
+                let zh = workingMetaphorModels[i].metaphors.filter((m: BarChartMetaphorCase) => m.lang === 'zh');
+                let ru = workingMetaphorModels[i].metaphors.filter((m: BarChartMetaphorCase) => m.lang === 'ru');
+
+                if (en.length > 0) {
+                    models_en.push({
+                        name: workingMetaphorModels[i].name,
+                        metaphors: [...en]
+                    })
+                }
+
+                if (ru.length > 0) {
+                    models_ru.push({
+                        name: workingMetaphorModels[i].name,
+                        metaphors: [...ru]
+                    })
+                }
+
+                if (zh.length > 0) {
+                    models_zh.push({
+                        name: workingMetaphorModels[i].name,
+                        metaphors: [...zh]
+                    })
+                }
+
+            }
+
+            if (models_en && models_en.length > 0){
+
+                models_en = models_en.sort((a: any, b: any)  => b.metaphors.length - a.metaphors.length).slice(0, metaphorsBarChartTop);
+    
+                for (let i in models_en) {
+                    workingDataByCountry[0].push({
+                        name: models_en[i].name,
+                        lang: 'en',
+                        color: '#7371fcdc',
+                        metaphors: models_en[i].metaphors,
+                        metaphorsNum: models_en[i].metaphors.length
+                    })
+                }
+            }
+
+            if (models_ru && models_ru.length > 0){
+                
+                models_ru = models_ru.sort((a: any, b: any) => b.metaphors.length - a.metaphors.length).slice(0, metaphorsBarChartTop);
+
+                for (let i in models_ru) {
+                    workingDataByCountry[1].push({
+                        name: models_ru[i].name,
+                        lang: 'ru',
+                        color: '#a1d2cef0',
+                        metaphors: models_ru[i].metaphors,
+                        metaphorsNum: models_ru[i].metaphors.length
+                    })
+                }
+            }
+
+            if (models_zh && models_zh.length > 0){
+
+                models_zh = models_zh.sort((a: any, b: any)  => b.metaphors.length - a.metaphors.length).slice(0, metaphorsBarChartTop);
+
+                for (let i in models_zh) {
+                    workingDataByCountry[2].push({
+                        name: models_zh[i].name,
+                        lang: 'zh',
+                        color: '#e87361cc',
+                        metaphors: models_zh[i].metaphors,
+                        metaphorsNum: models_zh[i].metaphors.length
+                    })
+                }
+            }
+        }
+
+        setMetaphorsBarChartDataByCountry(metaphorsBarChartDataByCountry => [...workingDataByCountry])
+    }, [metaphorsData, metaphorsBarChartTop])
+
     return (
         <>
             <Helmet
@@ -672,33 +771,67 @@ const ResultsPage = () => {
                             {t(`metaphorsChart.subtitle`)}
                         </h3>
                         <div
-                            className="metaphorsChartContainer__selectTop"
+                            style={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'center'
+                            }}
                         >
-                            <InputLabel id="selectTopMetaphors">{t(`metaphorsChart.selectTop`)}</InputLabel>
-                            <Select
-                                labelId="selectTopMetaphors"
-                                id="selectTopMetaphors-select"
-                                value={metaphorsBarChartTop}
-                                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                                    setMetaphorsBarChartTop(event.target.value as number);
-                                }}
+                            <div
+                                className="metaphorsChartContainer__selectTop"
                             >
-                                <MenuItem value={metaphorsData && metaphorsData.length}>{t(`metaphorsChart.selectOption_all`)}</MenuItem>
-                                <MenuItem value={5}>5</MenuItem>
-                                <MenuItem value={10}>10</MenuItem>
-                                <MenuItem value={15}>15</MenuItem>
-                                <MenuItem value={20}>20</MenuItem>
-                                <MenuItem value={25}>25</MenuItem>
-                            </Select>
+                                <InputLabel id="selectTopMetaphors">{t(`metaphorsChart.selectTop`)}</InputLabel>
+                                <Select
+                                    labelId="selectTopMetaphors"
+                                    id="selectTopMetaphors-select"
+                                    value={metaphorsBarChartTop}
+                                    onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                                        setMetaphorsBarChartTop(event.target.value as number);
+                                    }}
+                                >
+                                    <MenuItem value={metaphorsData && metaphorsData.length}>{t(`metaphorsChart.selectOption_all`)}</MenuItem>
+                                    <MenuItem value={5}>5</MenuItem>
+                                    <MenuItem value={10}>10</MenuItem>
+                                    <MenuItem value={15}>15</MenuItem>
+                                    <MenuItem value={20}>20</MenuItem>
+                                    <MenuItem value={25}>25</MenuItem>
+                                </Select>
+                            </div>
+                            <div
+                                className="metaphorsChartContainer__selectMetaphordsDisplayType"
+                            >
+                                <InputLabel id="selectMetaphorsDisplayType">{t(`metaphorsChart.selectToMetaphorsDisplayType`)}</InputLabel>
+                                <Select
+                                    labelId="selectMetaphorsDisplayType"
+                                    id="selectMetaphorsDisplayType-select"
+                                    value={metaphorsDisplayType}
+                                    onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                                        setMetaphorsDisplayType(event.target.value as string);
+                                    }}
+                                >
+                                    <MenuItem value={`all`}>{t(`metaphorsChart.selectMetaphorsDisplayType_all`)}</MenuItem>
+                                    <MenuItem value={`byCountry`}>{t(`metaphorsChart.selectMetaphorsDisplayType_byCountry`)}</MenuItem>
+                                </Select>
+                            </div>
                         </div>
                     {
                         articlesData.length > 0
                         ?
-                        <MetaphorsBarChart
-                            width={width > 1025 ? width - 300 : width - 24}
-                            height={300}
-                            data={metaphorsBarChartData}
-                        />
+                        (
+                            metaphorsDisplayType === 'all'
+                            ?
+                            <MetaphorsBarChart
+                                width={width > 1025 ? width - 300 : width - 24}
+                                height={300}
+                                data={metaphorsBarChartData}
+                            />
+                            :
+                            <MetaphorsBarChartByCountry
+                                width={width > 1025 ? width - 300 : width - 24}
+                                height={300}
+                                data={metaphorsBarChartDataByCountry}
+                            />
+                        )
                         :
                         null
                     }
