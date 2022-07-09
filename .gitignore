@@ -1,3 +1,6 @@
 node_modules
 .env
 _dev-utils
+
+public/uploads/*
+public/uploads_temp/*
