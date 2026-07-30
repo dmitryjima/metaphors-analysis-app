@@ -2,8 +2,6 @@
 
 A MERN-stack application for comparative metaphors analysis of multilingual corpora, developed in the framework of the PhD research "Comparative study of the metaphors of AI technology in the Russian, Chinese, and American political media discourse". Can be used as a tool for further research in the same field, or adopted and utilised for any comparative research project that involves gathering and annotating large amounts of multilingual textual content.
 
-[Deployed Application](https://ai-metaphors-analysis.zdcreatech.com/)
-
 ## Table of contents
 1. [Overview](#overview)
 2. [Core Features](#core-features)
